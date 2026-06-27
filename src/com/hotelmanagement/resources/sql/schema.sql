@@ -1,0 +1,1 @@
+-- Database schema for Hotel Management System
