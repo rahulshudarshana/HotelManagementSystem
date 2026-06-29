@@ -10,6 +10,11 @@ package com.hotelmanagement.view.login;
  */
 public class LoginView extends javax.swing.JFrame {
 
+    // TEMPORARY CREDENTIALS - for development only
+    // TODO: Replace with LoginController -> AuthService -> UserDAO -> SQL Server authentication
+    private static final String TEMP_USERNAME = "admin";
+    private static final String TEMP_PASSWORD = "admin123";
+
     /**
      * Creates new form LoginView
      */
@@ -155,10 +160,26 @@ public class LoginView extends javax.swing.JFrame {
 
     private void loginbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginbtnActionPerformed
         if (validateInput()) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Login functionality is not implemented yet.\nDatabase integration will be added later.",
-                "Information",
-                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            String username = usernametxt.getText().trim();
+            String password = new String(passwordtxt.getPassword()).trim();
+
+            // TODO: Replace with LoginController -> AuthService -> UserDAO -> SQL Server authentication
+            if (TEMP_USERNAME.equals(username) && TEMP_PASSWORD.equals(password)) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Login Successful!",
+                    "Success",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                com.hotelmanagement.view.dashboard.DashboardPanel dashboard = new com.hotelmanagement.view.dashboard.DashboardPanel();
+                com.hotelmanagement.view.MainFrame mainFrame = new com.hotelmanagement.view.MainFrame(dashboard);
+                mainFrame.setVisible(true);
+                this.dispose();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Invalid username or password.",
+                    "Login Failed",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_loginbtnActionPerformed
 
@@ -222,8 +243,6 @@ public class LoginView extends javax.swing.JFrame {
         });
     }
 
-    private char defaultEchoChar;
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -234,4 +253,6 @@ public class LoginView extends javax.swing.JFrame {
     private javax.swing.JCheckBox showpassword;
     private javax.swing.JTextField usernametxt;
     // End of variables declaration//GEN-END:variables
+
+    private char defaultEchoChar;
 }
