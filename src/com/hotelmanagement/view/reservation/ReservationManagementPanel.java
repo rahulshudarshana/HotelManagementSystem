@@ -285,4 +285,18 @@ public class ReservationManagementPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtSearchReservation;
     private javax.swing.JTextArea txtSpecialRequests;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnBook() { return btnBook; }
+    public javax.swing.JButton getBtnCancel() { return btnCancel; }
+    public javax.swing.JButton getBtnClear() { return btnClear; }
+    public javax.swing.JButton getBtnSearch() { return btnSearch; }
+    public javax.swing.JButton getBtnUpdate() { return btnUpdate; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JComboBox<String> getCmbGuest() { return cmbGuest; }
+    public javax.swing.JComboBox<String> getCmbStatus() { return cmbReservationStatus; }
+    public javax.swing.JComboBox<String> getCmbRoom() { return cmbRoom; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtNumberOfGuests() { return txtNumberOfGuests; }
+    public javax.swing.JTextField getTxtSearch() { return txtSearchReservation; }
+    public javax.swing.JTextArea getTxtSpecialRequests() { return txtSpecialRequests; }
 }

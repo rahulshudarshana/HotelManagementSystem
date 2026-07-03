@@ -243,4 +243,21 @@ public class DashboardPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnDashboard() { return btndashboard; }
+    public javax.swing.JButton getBtnGuest() { return btnguest; }
+    public javax.swing.JButton getBtnRoom() { return btnroom; }
+    public javax.swing.JButton getBtnReservation() { return btnreservation; }
+    public javax.swing.JButton getBtnCheckIn() { return btncheckin; }
+    public javax.swing.JButton getBtnCheckOut() { return btncheckout; }
+    public javax.swing.JButton getBtnBilling() { return btnbilling; }
+    public javax.swing.JButton getBtnEmployee() { return btnemployee; }
+    public javax.swing.JButton getBtnReports() { return btnreports; }
+    public javax.swing.JButton getBtnLogout() { return btnlogout; }
+    public javax.swing.JLabel getLabelTotalRooms() { return jLabel8; }
+    public javax.swing.JLabel getLabelAvailable() { return jLabel9; }
+    public javax.swing.JLabel getLabelOccupied() { return jLabel10; }
+    public javax.swing.JLabel getLabelCheckIns() { return jLabel11; }
+    public javax.swing.JLabel getLabelCheckOuts() { return jLabel12; }
+    public javax.swing.JLabel getLabelRevenue() { return jLabel13; }
 }

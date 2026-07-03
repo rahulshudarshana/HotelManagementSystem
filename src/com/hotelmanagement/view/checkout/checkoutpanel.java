@@ -263,4 +263,17 @@ public class checkoutpanel extends javax.swing.JPanel {
     private javax.swing.JTextField searchcheckouttxt;
     private javax.swing.JTextField ttlamounttxt;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JButton getBtnSearch() { return btnsearch; }
+    public javax.swing.JButton getBtnCalculateBill() { return calculatebillbtn; }
+    public javax.swing.JButton getBtnCheckOut() { return checkoutbtn; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtAdditionalCharges() { return addchargestxt; }
+    public javax.swing.JTextField getTxtGuestName() { return guestnametxt; }
+    public javax.swing.JTextField getTxtRoomCharges() { return rmchagestxt; }
+    public javax.swing.JTextField getTxtRoomNo() { return roomno; }
+    public javax.swing.JComboBox<String> getCmbRoomType() { return roomtpecmb; }
+    public javax.swing.JTextField getTxtSearch() { return searchcheckouttxt; }
+    public javax.swing.JTextField getTxtTotalAmount() { return ttlamounttxt; }
 }

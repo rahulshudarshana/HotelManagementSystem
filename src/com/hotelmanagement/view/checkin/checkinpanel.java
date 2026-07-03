@@ -241,5 +241,17 @@ public class checkinpanel extends javax.swing.JPanel {
     private javax.swing.JTextField roomnotxt;
     private javax.swing.JTextField txtReservationID;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnSearch() { return btnSearch; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnCheckIn() { return btncheckin; }
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtGuest() { return guesttxt; }
+    public javax.swing.JTextField getTxtNoOfGuests() { return noguestroomtxt; }
+    public javax.swing.JTextField getTxtReceptionist() { return receptxt; }
+    public javax.swing.JComboBox<String> getCmbRoom() { return rmcmb; }
+    public javax.swing.JTextField getTxtRoomNo() { return roomnotxt; }
+    public javax.swing.JTextField getTxtReservationID() { return txtReservationID; }
 }
 

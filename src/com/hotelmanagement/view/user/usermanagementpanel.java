@@ -276,4 +276,22 @@ public class usermanagementpanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtUsername;
     private javax.swing.JTextField txtsearch;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnDelete() { return btnDelete; }
+    public javax.swing.JButton getBtnUpdate() { return btnUpdate; }
+    public javax.swing.JButton getBtnAddUser() { return btnadduser; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JButton getBtnResetPassword() { return btnresetpassword; }
+    public javax.swing.JButton getBtnSearch() { return btnsearch; }
+    public javax.swing.JCheckBox getChkShowPassword() { return chkShowPassword; }
+    public javax.swing.JComboBox<String> getCmbEmployee() { return cmbEmployee; }
+    public javax.swing.JComboBox<String> getCmbRole() { return cmbRole; }
+    public javax.swing.JComboBox<String> getCmbStatus() { return cmbStatus; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtConfirmPassword() { return txtConfirmPassword; }
+    public javax.swing.JTextField getTxtPassword() { return txtPassword; }
+    public javax.swing.JTextField getTxtUserID() { return txtUserID; }
+    public javax.swing.JTextField getTxtUsername() { return txtUsername; }
+    public javax.swing.JTextField getTxtSearch() { return txtsearch; }
 }

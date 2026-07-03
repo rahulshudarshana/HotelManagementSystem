@@ -270,4 +270,21 @@ public class GuestManagementPanel extends javax.swing.JPanel {
     private javax.swing.JTextField numbertxt;
     private javax.swing.JTextField searchbar;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JButton getBtnDelete() { return btndelete; }
+    public javax.swing.JButton getBtnSearch() { return btnsearch; }
+    public javax.swing.JButton getBtnUpdate() { return btnupdate; }
+    public javax.swing.JButton getBtnAdd() { return jButton1; }
+    public javax.swing.JRadioButton getRadioFemale() { return gndfemale; }
+    public javax.swing.JRadioButton getRadioMale() { return gndmale; }
+    public javax.swing.JTable getTable() { return guestdatatbl; }
+    public javax.swing.JTextField getTxtAddress() { return Addresstxt; }
+    public javax.swing.JTextField getTxtEmail() { return Email; }
+    public javax.swing.JTextField getTxtFirstName() { return Fname; }
+    public javax.swing.JTextField getTxtLastName() { return Lname; }
+    public javax.swing.JTextField getTxtNIC() { return Nic; }
+    public javax.swing.JTextField getTxtPhone() { return numbertxt; }
+    public javax.swing.JTextField getTxtSearch() { return searchbar; }
 }

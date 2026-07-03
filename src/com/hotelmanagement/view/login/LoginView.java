@@ -10,10 +10,7 @@ package com.hotelmanagement.view.login;
  */
 public class LoginView extends javax.swing.JFrame {
 
-    // TEMPORARY CREDENTIALS - for development only
-    // TODO: Replace with LoginController -> AuthService -> UserDAO -> SQL Server authentication
-    private static final String TEMP_USERNAME = "admin";
-    private static final String TEMP_PASSWORD = "admin123";
+    private com.hotelmanagement.controller.LoginController loginController;
 
     /**
      * Creates new form LoginView
@@ -21,6 +18,11 @@ public class LoginView extends javax.swing.JFrame {
     public LoginView() {
         initComponents();
         defaultEchoChar = passwordtxt.getEchoChar();
+        loginController = new com.hotelmanagement.controller.LoginController(this);
+    }
+
+    public com.hotelmanagement.controller.LoginController getLoginController() {
+        return loginController;
     }
 
     /**
@@ -149,41 +151,14 @@ public class LoginView extends javax.swing.JFrame {
     }//GEN-LAST:event_showpasswordActionPerformed
 
     private void loginclosebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginclosebtnActionPerformed
-        int response = javax.swing.JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to exit the application?",
-            "Exit Confirmation",
-            javax.swing.JOptionPane.YES_NO_OPTION);
-        if (response == javax.swing.JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
+        closeConfirmation();
     }//GEN-LAST:event_loginclosebtnActionPerformed
 
     private void loginbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginbtnActionPerformed
-        if (validateInput()) {
-            String username = usernametxt.getText().trim();
-            String password = new String(passwordtxt.getPassword()).trim();
-
-            // TODO: Replace with LoginController -> AuthService -> UserDAO -> SQL Server authentication
-            if (TEMP_USERNAME.equals(username) && TEMP_PASSWORD.equals(password)) {
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "Login Successful!",
-                    "Success",
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-                com.hotelmanagement.view.dashboard.DashboardPanel dashboard = new com.hotelmanagement.view.dashboard.DashboardPanel();
-                com.hotelmanagement.view.MainFrame mainFrame = new com.hotelmanagement.view.MainFrame(dashboard);
-                mainFrame.setVisible(true);
-                this.dispose();
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this,
-                    "Invalid username or password.",
-                    "Login Failed",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        loginController.login();
     }//GEN-LAST:event_loginbtnActionPerformed
 
-    private boolean validateInput() {
+    public boolean validateInput() {
         String username = usernametxt.getText().trim();
         String password = new String(passwordtxt.getPassword()).trim();
 
@@ -255,4 +230,27 @@ public class LoginView extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private char defaultEchoChar;
+
+    public javax.swing.JButton getBtnLogin() { return loginbtn; }
+    public javax.swing.JButton getBtnClose() { return loginclosebtn; }
+    public javax.swing.JTextField getTxtUsername() { return usernametxt; }
+    public javax.swing.JPasswordField getTxtPassword() { return passwordtxt; }
+
+    public void showSuccess(String message) {
+        javax.swing.JOptionPane.showMessageDialog(this, message, "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showError(String message) {
+        javax.swing.JOptionPane.showMessageDialog(this, message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void closeConfirmation() {
+        int response = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to exit the application?",
+            "Exit Confirmation",
+            javax.swing.JOptionPane.YES_NO_OPTION);
+        if (response == javax.swing.JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
 }

@@ -343,4 +343,26 @@ public class employeemanagementpanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtSalary;
     private javax.swing.JTextField txtsearch;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnAdd() { return btnAdd; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JButton getBtnDelete() { return btndelete; }
+    public javax.swing.JButton getBtnSearch() { return btnsearch; }
+    public javax.swing.JButton getBtnUpdate() { return btnupdate; }
+    public javax.swing.JComboBox<String> getCmbDepartment() { return cmbDepartment; }
+    public javax.swing.JComboBox<String> getCmbEmploymentStatus() { return cmbEmploymentStatus; }
+    public javax.swing.JComboBox<String> getCmbGender() { return cmbGender; }
+    public com.toedter.calendar.JDateChooser getDpHireDate() { return dpHireDate; }
+    public com.toedter.calendar.JDateChooser getDpDateOfBirth() { return jDateChooser1; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtEmail() { return txtEmail; }
+    public javax.swing.JTextField getTxtEmployeeID() { return txtEmployeeID; }
+    public javax.swing.JTextField getTxtFirstName() { return txtFirstName; }
+    public javax.swing.JTextField getTxtLastName() { return txtLastName; }
+    public javax.swing.JTextField getTxtNIC() { return txtNIC; }
+    public javax.swing.JTextField getTxtPhone() { return txtPhone; }
+    public javax.swing.JTextField getTxtPosition() { return txtPosition; }
+    public javax.swing.JTextField getTxtSalary() { return txtSalary; }
+    public javax.swing.JTextField getTxtSearch() { return txtsearch; }
 }

@@ -304,4 +304,23 @@ public class housekeepingpanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtsearch;
     private javax.swing.JTextField txttaskid;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnAssignTask() { return btnassigntask; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JButton getBtnCompleteTask() { return btncompletetask; }
+    public javax.swing.JButton getBtnDelete() { return btndelete; }
+    public javax.swing.JButton getBtnSearch() { return btnsearch; }
+    public javax.swing.JButton getBtnUpdate() { return btnupdate; }
+    public javax.swing.JComboBox<String> getCmbPriority() { return cmbPriority; }
+    public javax.swing.JComboBox<String> getCmbStatus() { return cmbTaskStatus; }
+    public javax.swing.JComboBox<String> getCmbAssignedEmployee() { return cmbassignemp; }
+    public javax.swing.JComboBox<String> getCmbRoomNo() { return cmbroomno; }
+    public javax.swing.JComboBox<String> getCmbTaskType() { return cmbtasktype; }
+    public com.toedter.calendar.JDateChooser getDpScheduledDate() { return jDateChooser1; }
+    public com.toedter.calendar.JDateChooser getDpCompletionDate() { return jDateChooser2; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextArea getNotesArea() { return jTextArea1; }
+    public javax.swing.JTextField getTxtSearch() { return txtsearch; }
+    public javax.swing.JTextField getTxtTaskID() { return txttaskid; }
 }

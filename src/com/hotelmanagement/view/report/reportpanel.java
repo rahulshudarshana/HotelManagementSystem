@@ -225,4 +225,17 @@ public class reportpanel extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtKeyword;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnExportExcel() { return btnExportExcel; }
+    public javax.swing.JButton getBtnExportPDF() { return btnExportPDF; }
+    public javax.swing.JButton getBtnGenerate() { return btnGenerate; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JButton getBtnPrint() { return btnprint; }
+    public javax.swing.JComboBox<String> getCmbFilter() { return cmbFilter; }
+    public javax.swing.JComboBox<String> getCmbReportType() { return cmbReportType; }
+    public com.toedter.calendar.JDateChooser getDpFromDate() { return dpFromDate; }
+    public com.toedter.calendar.JDateChooser getDpToDate() { return dpToDate; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtKeyword() { return txtKeyword; }
 }

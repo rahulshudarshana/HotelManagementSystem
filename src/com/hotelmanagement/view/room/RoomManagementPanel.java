@@ -232,4 +232,19 @@ public class RoomManagementPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtSearch;
     private javax.swing.JTextField txtcapacity;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnSearch() { return btnSearch; }
+    public javax.swing.JButton getBtnAdd() { return btnadd; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnClear() { return btnclear; }
+    public javax.swing.JButton getBtnDelete() { return btndelete; }
+    public javax.swing.JButton getBtnUpdate() { return btnupdate; }
+    public javax.swing.JComboBox<String> getCmbRoomType() { return cmbRoomType; }
+    public javax.swing.JComboBox<String> getCmbStatus() { return cmbStatus; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtFloor() { return txtFloor; }
+    public javax.swing.JTextField getTxtPrice() { return txtPrice; }
+    public javax.swing.JTextField getTxtRoomNumber() { return txtRoomNumber; }
+    public javax.swing.JTextField getTxtSearch() { return txtSearch; }
+    public javax.swing.JTextField getTxtCapacity() { return txtcapacity; }
 }

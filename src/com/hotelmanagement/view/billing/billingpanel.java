@@ -373,4 +373,26 @@ public class billingpanel extends javax.swing.JPanel {
     private javax.swing.JTextField taxtxt;
     private javax.swing.JTextField totalamounttxt;
     // End of variables declaration//GEN-END:variables
+
+    public javax.swing.JButton getBtnCalculate() { return btnCalculate; }
+    public javax.swing.JButton getBtnPrintInvoice() { return btnPrintInvoice; }
+    public javax.swing.JButton getBtnProcessPayment() { return btnProcessPayment; }
+    public javax.swing.JButton getBtnBack() { return btnback; }
+    public javax.swing.JButton getBtnClear() { return btncllear; }
+    public javax.swing.JButton getBtnSearch() { return btnsearch; }
+    public javax.swing.JComboBox<String> getCmbPaymentStatus() { return cmbPaymentStatus; }
+    public javax.swing.JComboBox<String> getCmbPaymentMethod() { return cmtpaymentmethod; }
+    public javax.swing.JTable getTable() { return jTable1; }
+    public javax.swing.JTextField getTxtAmountPaid() { return amountpaidtxt; }
+    public javax.swing.JTextField getTxtBalance() { return balancetxt; }
+    public javax.swing.JTextField getTxtDiscount() { return dicounttxt; }
+    public javax.swing.JTextField getTxtExtraCharges() { return extrachagrestxt; }
+    public javax.swing.JTextField getTxtGuestName() { return gustnametxt; }
+    public javax.swing.JTextField getTxtPayment() { return paymenttxt; }
+    public javax.swing.JTextField getTxtReservation() { return reservationtxt; }
+    public javax.swing.JTextField getTxtRoomCharges() { return roomchargestxt; }
+    public javax.swing.JTextField getTxtRoomNo() { return roomnotxt; }
+    public javax.swing.JTextField getTxtSearchID() { return searchidtxt; }
+    public javax.swing.JTextField getTxtTax() { return taxtxt; }
+    public javax.swing.JTextField getTxtTotalAmount() { return totalamounttxt; }
 }
