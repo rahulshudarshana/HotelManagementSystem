@@ -111,7 +111,7 @@ public class ReportDAO {
     }
 
     public int getCheckInsToday() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM CheckIns WHERE CAST(ActualCheckInDate AS DATE) = CAST(GETDATE() AS DATE)";
+        String sql = "SELECT COUNT(*) FROM CheckIns WHERE DATE(ActualCheckInDate) = CURDATE()";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -121,7 +121,7 @@ public class ReportDAO {
     }
 
     public int getCheckOutsToday() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM CheckOuts WHERE CAST(ActualCheckOutDate AS DATE) = CAST(GETDATE() AS DATE)";
+        String sql = "SELECT COUNT(*) FROM CheckOuts WHERE DATE(ActualCheckOutDate) = CURDATE()";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -131,7 +131,7 @@ public class ReportDAO {
     }
 
     public BigDecimal getTotalRevenueToday() throws SQLException {
-        String sql = "SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE CAST(ActualCheckOutDate AS DATE) = CAST(GETDATE() AS DATE)";
+        String sql = "SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE DATE(ActualCheckOutDate) = CURDATE()";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -141,7 +141,7 @@ public class ReportDAO {
     }
 
     public BigDecimal getTotalRevenue(LocalDate from, LocalDate to) throws SQLException {
-        String sql = "SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE CAST(ActualCheckOutDate AS DATE) BETWEEN ? AND ?";
+        String sql = "SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE DATE(ActualCheckOutDate) BETWEEN ? AND ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, from);
@@ -154,7 +154,7 @@ public class ReportDAO {
     }
 
     public BigDecimal getTotalPayments(LocalDate from, LocalDate to) throws SQLException {
-        String sql = "SELECT COALESCE(SUM(Amount), 0) FROM Payments WHERE CAST(PaymentDate AS DATE) BETWEEN ? AND ?";
+        String sql = "SELECT COALESCE(SUM(Amount), 0) FROM Payments WHERE DATE(PaymentDate) BETWEEN ? AND ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, from);

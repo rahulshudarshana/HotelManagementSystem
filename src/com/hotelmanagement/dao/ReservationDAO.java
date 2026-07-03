@@ -141,7 +141,7 @@ public class ReservationDAO {
     }
 
     public void updateReservation(Reservation reservation) throws SQLException {
-        String sql = "UPDATE Reservations SET GuestID = ?, RoomID = ?, CheckInDate = ?, CheckOutDate = ?, NumberOfGuests = ?, Status = ?, SpecialRequests = ?, UpdatedAt = GETDATE() WHERE ReservationID = ?";
+        String sql = "UPDATE Reservations SET GuestID = ?, RoomID = ?, CheckInDate = ?, CheckOutDate = ?, NumberOfGuests = ?, Status = ?, SpecialRequests = ?, UpdatedAt = NOW() WHERE ReservationID = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, reservation.getGuestID());
@@ -157,7 +157,7 @@ public class ReservationDAO {
     }
 
     public void updateReservationStatus(int reservationID, ReservationStatus status) throws SQLException {
-        String sql = "UPDATE Reservations SET Status = ?, UpdatedAt = GETDATE() WHERE ReservationID = ?";
+        String sql = "UPDATE Reservations SET Status = ?, UpdatedAt = NOW() WHERE ReservationID = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status.name());

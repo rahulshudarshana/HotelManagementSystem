@@ -103,7 +103,7 @@ public class UserDAO {
     }
 
     public void updateLastLogin(int userID) throws SQLException {
-        String sql = "UPDATE Users SET LastLogin = GETDATE() WHERE UserID = ?";
+        String sql = "UPDATE Users SET LastLogin = NOW() WHERE UserID = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userID);
