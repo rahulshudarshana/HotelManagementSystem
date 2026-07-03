@@ -124,7 +124,7 @@ public class HousekeepingDAO {
     }
 
     public void updateTask(Housekeeping task) throws SQLException {
-        String sql = "UPDATE HousekeepingTasks SET RoomID = ?, AssignedEmployeeID = ?, TaskType = ?, Priority = ?, Status = ?, ScheduledDate = ?, CompletionDate = ?, Notes = ?, UpdatedAt = NOW() WHERE TaskID = ?";
+        String sql = "UPDATE HousekeepingTasks SET RoomID = ?, AssignedEmployeeID = ?, TaskType = ?, Priority = ?, Status = ?, ScheduledDate = ?, CompletionDate = ?, Notes = ?, UpdatedAt = GETDATE() WHERE TaskID = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, task.getRoomID());
@@ -141,9 +141,9 @@ public class HousekeepingDAO {
     }
 
     public void updateTaskStatus(int taskID, TaskStatus status) throws SQLException {
-        String sql = "UPDATE HousekeepingTasks SET Status = ?, UpdatedAt = NOW() WHERE TaskID = ?";
+        String sql = "UPDATE HousekeepingTasks SET Status = ?, UpdatedAt = GETDATE() WHERE TaskID = ?";
         if (status == TaskStatus.Completed) {
-            sql = "UPDATE HousekeepingTasks SET Status = ?, CompletionDate = NOW(), UpdatedAt = NOW() WHERE TaskID = ?";
+            sql = "UPDATE HousekeepingTasks SET Status = ?, CompletionDate = GETDATE(), UpdatedAt = GETDATE() WHERE TaskID = ?";
         }
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

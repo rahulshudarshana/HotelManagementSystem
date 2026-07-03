@@ -32,7 +32,7 @@ public class DatabaseConfig {
             url = props.getProperty("db.url");
             username = props.getProperty("db.username");
             password = props.getProperty("db.password");
-            driverClass = props.getProperty("db.driver", "com.mysql.cj.jdbc.Driver");
+            driverClass = props.getProperty("db.driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to load database configuration.", e);
             setDefaults();
@@ -40,17 +40,17 @@ public class DatabaseConfig {
     }
 
     private static void setDefaults() {
-        url = "jdbc:mysql://localhost:3306/HotelManagementDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-        username = "root";
-        password = "root";
-        driverClass = "com.mysql.cj.jdbc.Driver";
+        url = "jdbc:sqlserver://localhost:1433;databaseName=HotelManagementDB;encrypt=true;trustServerCertificate=true";
+        username = "sa";
+        password = "sa123";
+        driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
 
     public static Connection getConnection() throws SQLException {
         try {
             Class.forName(driverClass);
         } catch (ClassNotFoundException e) {
-            throw new SQLException("MySQL JDBC driver not found. Add mysql-connector-j.jar to the classpath.", e);
+            throw new SQLException("SQL Server JDBC driver not found. Add mssql-jdbc.jar to the classpath.", e);
         }
         Connection conn = DriverManager.getConnection(url, username, password);
         conn.setAutoCommit(true);
