@@ -10,11 +10,17 @@ package com.hotelmanagement.view.login;
  */
 public class LoginView extends javax.swing.JFrame {
 
+    // TEMPORARY CREDENTIALS - for development only
+    // TODO: Replace with LoginController -> AuthService -> UserDAO -> SQL Server authentication
+    private static final String TEMP_USERNAME = "admin";
+    private static final String TEMP_PASSWORD = "admin123";
+
     /**
      * Creates new form LoginView
      */
     public LoginView() {
         initComponents();
+        defaultEchoChar = passwordtxt.getEchoChar();
     }
 
     /**
@@ -65,6 +71,11 @@ public class LoginView extends javax.swing.JFrame {
         loginbtn.setBackground(new java.awt.Color(153, 153, 153));
         loginbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         loginbtn.setText("Login");
+        loginbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginbtnActionPerformed(evt);
+            }
+        });
 
         loginclosebtn.setBackground(new java.awt.Color(153, 153, 153));
         loginclosebtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -130,12 +141,72 @@ public class LoginView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void showpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showpasswordActionPerformed
-        // TODO add your handling code here:
+        if (showpassword.isSelected()) {
+            passwordtxt.setEchoChar((char) 0);
+        } else {
+            passwordtxt.setEchoChar(defaultEchoChar);
+        }
     }//GEN-LAST:event_showpasswordActionPerformed
 
     private void loginclosebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginclosebtnActionPerformed
-        // TODO add your handling code here:
+        int response = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to exit the application?",
+            "Exit Confirmation",
+            javax.swing.JOptionPane.YES_NO_OPTION);
+        if (response == javax.swing.JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
     }//GEN-LAST:event_loginclosebtnActionPerformed
+
+    private void loginbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginbtnActionPerformed
+        if (validateInput()) {
+            String username = usernametxt.getText().trim();
+            String password = new String(passwordtxt.getPassword()).trim();
+
+            // TODO: Replace with LoginController -> AuthService -> UserDAO -> SQL Server authentication
+            if (TEMP_USERNAME.equals(username) && TEMP_PASSWORD.equals(password)) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Login Successful!",
+                    "Success",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                com.hotelmanagement.view.dashboard.DashboardPanel dashboard = new com.hotelmanagement.view.dashboard.DashboardPanel();
+                com.hotelmanagement.view.MainFrame mainFrame = new com.hotelmanagement.view.MainFrame(dashboard);
+                mainFrame.setVisible(true);
+                this.dispose();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Invalid username or password.",
+                    "Login Failed",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_loginbtnActionPerformed
+
+    private boolean validateInput() {
+        String username = usernametxt.getText().trim();
+        String password = new String(passwordtxt.getPassword()).trim();
+
+        if (username.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Username cannot be empty.",
+                "Validation Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            usernametxt.requestFocusInWindow();
+            return false;
+        }
+
+        if (password.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Password cannot be empty.",
+                "Validation Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            passwordtxt.requestFocusInWindow();
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * @param args the command line arguments
@@ -182,4 +253,6 @@ public class LoginView extends javax.swing.JFrame {
     private javax.swing.JCheckBox showpassword;
     private javax.swing.JTextField usernametxt;
     // End of variables declaration//GEN-END:variables
+
+    private char defaultEchoChar;
 }
