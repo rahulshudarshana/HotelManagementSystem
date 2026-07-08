@@ -1,91 +1,60 @@
 package com.hotelmanagement.dao;
 
-import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.model.CheckOut;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-public class CheckOutDAO {
+public class CheckOutDAO extends BaseDAO<CheckOut> {
+
+    private static final Logger LOGGER = Logger.getLogger(CheckOutDAO.class.getName());
+
+    private static final String COLUMNS = "CheckOutID, ReservationID, CheckInID, GuestID, RoomID, ActualCheckOutDate, RoomCharges, AdditionalCharges, TotalAmount, Notes, ProcessedBy, CreatedAt";
+    private static final String SQL_BY_ID = "SELECT " + COLUMNS + " FROM CheckOuts WHERE CheckOutID = ?";
+    private static final String SQL_BY_RESERVATION = "SELECT " + COLUMNS + " FROM CheckOuts WHERE ReservationID = ?";
+    private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM CheckOuts ORDER BY ActualCheckOutDate DESC";
+    private static final String SQL_INSERT = "INSERT INTO CheckOuts (ReservationID, CheckInID, GuestID, RoomID, RoomCharges, AdditionalCharges, TotalAmount, Notes, ProcessedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_DELETE = "DELETE FROM CheckOuts WHERE CheckOutID = ?";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM CheckOuts WHERE CAST(ReservationID AS NVARCHAR) LIKE ? ORDER BY ActualCheckOutDate DESC";
 
     public CheckOut getCheckOutById(int checkOutID) throws SQLException {
-        String sql = "SELECT * FROM CheckOuts WHERE CheckOutID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, checkOutID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapCheckOut(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_ID, checkOutID);
     }
 
     public CheckOut getCheckOutByReservation(int reservationID) throws SQLException {
-        String sql = "SELECT * FROM CheckOuts WHERE ReservationID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, reservationID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapCheckOut(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_RESERVATION, reservationID);
     }
 
     public List<CheckOut> getAllCheckOuts() throws SQLException {
-        List<CheckOut> checkOuts = new ArrayList<>();
-        String sql = "SELECT * FROM CheckOuts ORDER BY ActualCheckOutDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                checkOuts.add(mapCheckOut(rs));
-            }
-        }
-        return checkOuts;
+        return findAll(SQL_ALL);
+    }
+
+    public List<CheckOut> searchCheckOuts(String keyword) throws SQLException {
+        return findAll(SQL_SEARCH, "%" + keyword + "%");
     }
 
     public int insertCheckOut(CheckOut checkOut) throws SQLException {
-        String sql = "INSERT INTO CheckOuts (ReservationID, CheckInID, GuestID, RoomID, RoomCharges, AdditionalCharges, TotalAmount, Notes, ProcessedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, checkOut.getReservationID());
-            stmt.setInt(2, checkOut.getCheckInID());
-            stmt.setInt(3, checkOut.getGuestID());
-            stmt.setInt(4, checkOut.getRoomID());
-            stmt.setBigDecimal(5, checkOut.getRoomCharges());
-            stmt.setBigDecimal(6, checkOut.getAdditionalCharges());
-            stmt.setBigDecimal(7, checkOut.getTotalAmount());
-            stmt.setString(8, checkOut.getNotes());
-            stmt.setObject(9, checkOut.getProcessedBy());
-            stmt.executeUpdate();
-            try (ResultSet keys = stmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
-            }
-        }
-        return -1;
+        return insert(SQL_INSERT,
+            checkOut.getReservationID(), checkOut.getCheckInID(), checkOut.getGuestID(),
+            checkOut.getRoomID(), checkOut.getRoomCharges(), checkOut.getAdditionalCharges(),
+            checkOut.getTotalAmount(), checkOut.getNotes(), checkOut.getProcessedBy());
+    }
+
+    public int insertCheckOut(CheckOut checkOut, Connection conn) throws SQLException {
+        return insert(SQL_INSERT, conn,
+            checkOut.getReservationID(), checkOut.getCheckInID(), checkOut.getGuestID(),
+            checkOut.getRoomID(), checkOut.getRoomCharges(), checkOut.getAdditionalCharges(),
+            checkOut.getTotalAmount(), checkOut.getNotes(), checkOut.getProcessedBy());
     }
 
     public void deleteCheckOut(int checkOutID) throws SQLException {
-        String sql = "DELETE FROM CheckOuts WHERE CheckOutID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, checkOutID);
-            stmt.executeUpdate();
-        }
+        delete(SQL_DELETE, checkOutID);
     }
 
-    private CheckOut mapCheckOut(ResultSet rs) throws SQLException {
+    @Override
+    protected CheckOut mapRow(ResultSet rs) throws SQLException {
         CheckOut checkOut = new CheckOut();
         checkOut.setCheckOutID(rs.getInt("CheckOutID"));
         checkOut.setReservationID(rs.getInt("ReservationID"));

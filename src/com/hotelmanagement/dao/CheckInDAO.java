@@ -1,102 +1,69 @@
 package com.hotelmanagement.dao;
 
-import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.model.CheckIn;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-public class CheckInDAO {
+public class CheckInDAO extends BaseDAO<CheckIn> {
+
+    private static final Logger LOGGER = Logger.getLogger(CheckInDAO.class.getName());
+
+    private static final String COLUMNS = "CheckInID, ReservationID, GuestID, RoomID, ActualCheckInDate, NumberOfGuests, ReceptionistID, Notes, CreatedAt";
+    private static final String SQL_BY_ID = "SELECT " + COLUMNS + " FROM CheckIns WHERE CheckInID = ?";
+    private static final String SQL_BY_RESERVATION = "SELECT " + COLUMNS + " FROM CheckIns WHERE ReservationID = ?";
+    private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM CheckIns ORDER BY ActualCheckInDate DESC";
+    private static final String SQL_INSERT = "INSERT INTO CheckIns (ReservationID, GuestID, RoomID, NumberOfGuests, ReceptionistID, Notes) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = "UPDATE CheckIns SET ReservationID = ?, GuestID = ?, RoomID = ?, NumberOfGuests = ?, Notes = ? WHERE CheckInID = ?";
+    private static final String SQL_DELETE = "DELETE FROM CheckIns WHERE CheckInID = ?";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM CheckIns WHERE CAST(ReservationID AS NVARCHAR) LIKE ? ORDER BY ActualCheckInDate DESC";
 
     public CheckIn getCheckInById(int checkInID) throws SQLException {
-        String sql = "SELECT * FROM CheckIns WHERE CheckInID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, checkInID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapCheckIn(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_ID, checkInID);
     }
 
     public CheckIn getCheckInByReservation(int reservationID) throws SQLException {
-        String sql = "SELECT * FROM CheckIns WHERE ReservationID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, reservationID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapCheckIn(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_RESERVATION, reservationID);
+    }
+
+    public CheckIn getCheckInByReservation(int reservationID, Connection conn) throws SQLException {
+        return findOne(SQL_BY_RESERVATION, conn, reservationID);
     }
 
     public List<CheckIn> getAllCheckIns() throws SQLException {
-        List<CheckIn> checkIns = new ArrayList<>();
-        String sql = "SELECT * FROM CheckIns ORDER BY ActualCheckInDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                checkIns.add(mapCheckIn(rs));
-            }
-        }
-        return checkIns;
+        return findAll(SQL_ALL);
+    }
+
+    public List<CheckIn> searchCheckIns(String keyword) throws SQLException {
+        return findAll(SQL_SEARCH, "%" + keyword + "%");
     }
 
     public int insertCheckIn(CheckIn checkIn) throws SQLException {
-        String sql = "INSERT INTO CheckIns (ReservationID, GuestID, RoomID, NumberOfGuests, ReceptionistID, Notes) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, checkIn.getReservationID());
-            stmt.setInt(2, checkIn.getGuestID());
-            stmt.setInt(3, checkIn.getRoomID());
-            stmt.setInt(4, checkIn.getNumberOfGuests());
-            stmt.setObject(5, checkIn.getReceptionistID());
-            stmt.setString(6, checkIn.getNotes());
-            stmt.executeUpdate();
-            try (ResultSet keys = stmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
-            }
-        }
-        return -1;
+        return insert(SQL_INSERT,
+            checkIn.getReservationID(), checkIn.getGuestID(), checkIn.getRoomID(),
+            checkIn.getNumberOfGuests(), checkIn.getReceptionistID(), checkIn.getNotes());
+    }
+
+    public int insertCheckIn(CheckIn checkIn, Connection conn) throws SQLException {
+        return insert(SQL_INSERT, conn,
+            checkIn.getReservationID(), checkIn.getGuestID(), checkIn.getRoomID(),
+            checkIn.getNumberOfGuests(), checkIn.getReceptionistID(), checkIn.getNotes());
     }
 
     public void updateCheckIn(CheckIn checkIn) throws SQLException {
-        String sql = "UPDATE CheckIns SET ReservationID = ?, GuestID = ?, RoomID = ?, NumberOfGuests = ?, Notes = ? WHERE CheckInID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, checkIn.getReservationID());
-            stmt.setInt(2, checkIn.getGuestID());
-            stmt.setInt(3, checkIn.getRoomID());
-            stmt.setInt(4, checkIn.getNumberOfGuests());
-            stmt.setString(5, checkIn.getNotes());
-            stmt.setInt(6, checkIn.getCheckInID());
-            stmt.executeUpdate();
-        }
+        update(SQL_UPDATE,
+            checkIn.getReservationID(), checkIn.getGuestID(), checkIn.getRoomID(),
+            checkIn.getNumberOfGuests(), checkIn.getNotes(), checkIn.getCheckInID());
     }
 
     public void deleteCheckIn(int checkInID) throws SQLException {
-        String sql = "DELETE FROM CheckIns WHERE CheckInID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, checkInID);
-            stmt.executeUpdate();
-        }
+        delete(SQL_DELETE, checkInID);
     }
 
-    private CheckIn mapCheckIn(ResultSet rs) throws SQLException {
+    @Override
+    protected CheckIn mapRow(ResultSet rs) throws SQLException {
         CheckIn checkIn = new CheckIn();
         checkIn.setCheckInID(rs.getInt("CheckInID"));
         checkIn.setReservationID(rs.getInt("ReservationID"));

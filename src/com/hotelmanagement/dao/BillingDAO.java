@@ -1,173 +1,93 @@
 package com.hotelmanagement.dao;
 
-import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.model.Bill;
 import com.hotelmanagement.model.enums.PaymentStatus;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-public class BillingDAO {
+public class BillingDAO extends BaseDAO<Bill> {
+
+    private static final Logger LOGGER = Logger.getLogger(BillingDAO.class.getName());
+
+    private static final String COLUMNS = "InvoiceID, InvoiceNumber, ReservationID, GuestID, RoomCharges, AdditionalCharges, Discount, Tax, TotalAmount, AmountPaid, Balance, Status, IssuedDate, DueDate, Notes, CreatedBy, CreatedAt";
+    private static final String SQL_BY_ID = "SELECT " + COLUMNS + " FROM Invoices WHERE InvoiceID = ?";
+    private static final String SQL_BY_NUMBER = "SELECT " + COLUMNS + " FROM Invoices WHERE InvoiceNumber = ?";
+    private static final String SQL_BY_RESERVATION = "SELECT " + COLUMNS + " FROM Invoices WHERE ReservationID = ?";
+    private static final String SQL_BY_GUEST = "SELECT " + COLUMNS + " FROM Invoices WHERE GuestID = ? ORDER BY IssuedDate DESC";
+    private static final String SQL_BY_STATUS = "SELECT " + COLUMNS + " FROM Invoices WHERE Status = ? ORDER BY IssuedDate DESC";
+    private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM Invoices ORDER BY IssuedDate DESC";
+    private static final String SQL_INSERT = "INSERT INTO Invoices (InvoiceNumber, ReservationID, GuestID, RoomCharges, AdditionalCharges, Discount, Tax, TotalAmount, AmountPaid, Balance, Status, DueDate, Notes, CreatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = "UPDATE Invoices SET RoomCharges = ?, AdditionalCharges = ?, Discount = ?, Tax = ?, TotalAmount = ?, AmountPaid = ?, Balance = ?, Status = ?, DueDate = ?, Notes = ? WHERE InvoiceID = ?";
+    private static final String SQL_UPDATE_PAYMENT = "UPDATE Invoices SET AmountPaid = ?, Balance = ?, Status = ? WHERE InvoiceID = ?";
+    private static final String SQL_DELETE = "DELETE FROM Invoices WHERE InvoiceID = ?";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM Invoices WHERE CAST(InvoiceID AS NVARCHAR) LIKE ? OR InvoiceNumber LIKE ? ORDER BY IssuedDate DESC";
 
     public Bill getInvoiceById(int invoiceID) throws SQLException {
-        String sql = "SELECT * FROM Invoices WHERE InvoiceID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, invoiceID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapBill(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_ID, invoiceID);
+    }
+
+    public Bill getInvoiceById(int invoiceID, Connection conn) throws SQLException {
+        return findOne(SQL_BY_ID, conn, invoiceID);
     }
 
     public Bill getInvoiceByNumber(String invoiceNumber) throws SQLException {
-        String sql = "SELECT * FROM Invoices WHERE InvoiceNumber = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, invoiceNumber);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapBill(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_NUMBER, invoiceNumber);
     }
 
     public Bill getInvoiceByReservation(int reservationID) throws SQLException {
-        String sql = "SELECT * FROM Invoices WHERE ReservationID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, reservationID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapBill(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_RESERVATION, reservationID);
     }
 
     public List<Bill> getInvoicesByGuest(int guestID) throws SQLException {
-        List<Bill> invoices = new ArrayList<>();
-        String sql = "SELECT * FROM Invoices WHERE GuestID = ? ORDER BY IssuedDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, guestID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    invoices.add(mapBill(rs));
-                }
-            }
-        }
-        return invoices;
+        return findAll(SQL_BY_GUEST, guestID);
     }
 
     public List<Bill> getInvoicesByStatus(PaymentStatus status) throws SQLException {
-        List<Bill> invoices = new ArrayList<>();
-        String sql = "SELECT * FROM Invoices WHERE Status = ? ORDER BY IssuedDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, status.name());
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    invoices.add(mapBill(rs));
-                }
-            }
-        }
-        return invoices;
+        return findAll(SQL_BY_STATUS, status);
     }
 
     public List<Bill> getAllInvoices() throws SQLException {
-        List<Bill> invoices = new ArrayList<>();
-        String sql = "SELECT * FROM Invoices ORDER BY IssuedDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                invoices.add(mapBill(rs));
-            }
-        }
-        return invoices;
+        return findAll(SQL_ALL);
+    }
+
+    public List<Bill> searchInvoices(String keyword) throws SQLException {
+        String pattern = "%" + keyword + "%";
+        return findAll(SQL_SEARCH, pattern, pattern);
     }
 
     public int insertInvoice(Bill bill) throws SQLException {
-        String sql = "INSERT INTO Invoices (InvoiceNumber, ReservationID, GuestID, RoomCharges, AdditionalCharges, Discount, Tax, TotalAmount, AmountPaid, Balance, Status, DueDate, Notes, CreatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, bill.getInvoiceNumber());
-            stmt.setInt(2, bill.getReservationID());
-            stmt.setInt(3, bill.getGuestID());
-            stmt.setBigDecimal(4, bill.getRoomCharges());
-            stmt.setBigDecimal(5, bill.getAdditionalCharges());
-            stmt.setBigDecimal(6, bill.getDiscount());
-            stmt.setBigDecimal(7, bill.getTax());
-            stmt.setBigDecimal(8, bill.getTotalAmount());
-            stmt.setBigDecimal(9, bill.getAmountPaid());
-            stmt.setBigDecimal(10, bill.getBalance());
-            stmt.setString(11, bill.getStatus().name());
-            stmt.setObject(12, bill.getDueDate());
-            stmt.setString(13, bill.getNotes());
-            stmt.setObject(14, bill.getCreatedBy());
-            stmt.executeUpdate();
-            try (ResultSet keys = stmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
-            }
-        }
-        return -1;
+        return insert(SQL_INSERT,
+            bill.getInvoiceNumber(), bill.getReservationID(), bill.getGuestID(),
+            bill.getRoomCharges(), bill.getAdditionalCharges(), bill.getDiscount(),
+            bill.getTax(), bill.getTotalAmount(), bill.getAmountPaid(), bill.getBalance(),
+            bill.getStatus(), bill.getDueDate(), bill.getNotes(), bill.getCreatedBy());
     }
 
     public void updateInvoice(Bill bill) throws SQLException {
-        String sql = "UPDATE Invoices SET RoomCharges = ?, AdditionalCharges = ?, Discount = ?, Tax = ?, TotalAmount = ?, AmountPaid = ?, Balance = ?, Status = ?, DueDate = ?, Notes = ? WHERE InvoiceID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setBigDecimal(1, bill.getRoomCharges());
-            stmt.setBigDecimal(2, bill.getAdditionalCharges());
-            stmt.setBigDecimal(3, bill.getDiscount());
-            stmt.setBigDecimal(4, bill.getTax());
-            stmt.setBigDecimal(5, bill.getTotalAmount());
-            stmt.setBigDecimal(6, bill.getAmountPaid());
-            stmt.setBigDecimal(7, bill.getBalance());
-            stmt.setString(8, bill.getStatus().name());
-            stmt.setObject(9, bill.getDueDate());
-            stmt.setString(10, bill.getNotes());
-            stmt.setInt(11, bill.getInvoiceID());
-            stmt.executeUpdate();
-        }
+        update(SQL_UPDATE,
+            bill.getRoomCharges(), bill.getAdditionalCharges(), bill.getDiscount(),
+            bill.getTax(), bill.getTotalAmount(), bill.getAmountPaid(), bill.getBalance(),
+            bill.getStatus(), bill.getDueDate(), bill.getNotes(), bill.getInvoiceID());
     }
 
     public void updateInvoicePayment(int invoiceID, BigDecimal amountPaid, BigDecimal balance, PaymentStatus status) throws SQLException {
-        String sql = "UPDATE Invoices SET AmountPaid = ?, Balance = ?, Status = ? WHERE InvoiceID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setBigDecimal(1, amountPaid);
-            stmt.setBigDecimal(2, balance);
-            stmt.setString(3, status.name());
-            stmt.setInt(4, invoiceID);
-            stmt.executeUpdate();
-        }
+        update(SQL_UPDATE_PAYMENT, amountPaid, balance, status, invoiceID);
+    }
+
+    public void updateInvoicePayment(int invoiceID, BigDecimal amountPaid, BigDecimal balance, PaymentStatus status, Connection conn) throws SQLException {
+        update(SQL_UPDATE_PAYMENT, conn, amountPaid, balance, status, invoiceID);
     }
 
     public void deleteInvoice(int invoiceID) throws SQLException {
-        String sql = "DELETE FROM Invoices WHERE InvoiceID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, invoiceID);
-            stmt.executeUpdate();
-        }
+        delete(SQL_DELETE, invoiceID);
     }
 
-    private Bill mapBill(ResultSet rs) throws SQLException {
+    @Override
+    protected Bill mapRow(ResultSet rs) throws SQLException {
         Bill bill = new Bill();
         bill.setInvoiceID(rs.getInt("InvoiceID"));
         bill.setInvoiceNumber(rs.getString("InvoiceNumber"));

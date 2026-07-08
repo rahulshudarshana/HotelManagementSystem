@@ -1,11 +1,14 @@
 package com.hotelmanagement.model;
 
 import com.hotelmanagement.model.enums.PaymentStatus;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Bill {
+public class Bill implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int invoiceID;
     private String invoiceNumber;
     private int reservationID;
@@ -91,4 +94,22 @@ public class Bill {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Bill bill = (Bill) o;
+        return invoiceID == bill.invoiceID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(invoiceID);
+    }
+
+    @Override
+    public String toString() {
+        return "Bill{invoiceID=" + invoiceID + ", invoiceNumber='" + invoiceNumber + "', totalAmount=" + totalAmount + ", status=" + status + "}";
+    }
 }

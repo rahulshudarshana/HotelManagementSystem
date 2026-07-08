@@ -4,8 +4,10 @@ import com.hotelmanagement.dao.GuestDAO;
 import com.hotelmanagement.model.Guest;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class GuestService {
+    private static final Logger LOGGER = Logger.getLogger(GuestService.class.getName());
     private final GuestDAO guestDAO;
 
     public GuestService() {

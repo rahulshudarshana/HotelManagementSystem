@@ -6,8 +6,10 @@ import com.hotelmanagement.model.enums.ReservationStatus;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class ReservationService {
+    private static final Logger LOGGER = Logger.getLogger(ReservationService.class.getName());
     private final ReservationDAO reservationDAO;
 
     public ReservationService() {
@@ -36,6 +38,10 @@ public class ReservationService {
 
     public List<Reservation> getAllReservations() throws SQLException {
         return reservationDAO.getAllReservations();
+    }
+
+    public List<Reservation> searchReservations(String keyword) throws SQLException {
+        return reservationDAO.searchReservations(keyword);
     }
 
     public boolean isRoomAvailable(int roomID, LocalDate checkIn, LocalDate checkOut) throws SQLException {

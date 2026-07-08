@@ -1,5 +1,7 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Room;
 import com.hotelmanagement.model.enums.RoomStatus;
 import com.hotelmanagement.service.RoomService;
@@ -44,8 +46,14 @@ public class RoomController {
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "Room added successfully.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(RoomController.class.getName()).log(Level.SEVERE, "Database error adding room", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(RoomController.class.getName()).log(Level.SEVERE, "Unexpected error adding room", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -70,8 +78,14 @@ public class RoomController {
                 clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "Room updated successfully.");
             }
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(RoomController.class.getName()).log(Level.SEVERE, "Database error updating room", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(RoomController.class.getName()).log(Level.SEVERE, "Unexpected error updating room", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -85,17 +99,19 @@ public class RoomController {
                 loadTable();
                 clearForm();
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(RoomController.class.getName()).log(Level.SEVERE, "Database error deleting room", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(RoomController.class.getName()).log(Level.SEVERE, "Unexpected error deleting room", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
     private void searchRooms() {
         try {
             String keyword = view.getTxtSearch().getText().trim();
-            List<Room> all = service.getAllRooms();
-            List<Room> filtered = all.stream().filter(r -> r.getRoomNumber().contains(keyword)).toList();
-            populateTable(filtered);
+            populateTable(service.searchRooms(keyword));
         } catch (SQLException ex) {
             Logger.getLogger(RoomController.class.getName()).log(Level.SEVERE, null, ex);
         }

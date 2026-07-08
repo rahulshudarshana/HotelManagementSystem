@@ -1,10 +1,13 @@
 package com.hotelmanagement.model;
 
 import com.hotelmanagement.model.enums.RoomStatus;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Room {
+public class Room implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int roomID;
     private String roomNumber;
     private int roomTypeID;
@@ -54,4 +57,22 @@ public class Room {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return roomID == room.roomID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(roomID);
+    }
+
+    @Override
+    public String toString() {
+        return "Room{roomID=" + roomID + ", roomNumber='" + roomNumber + "', status=" + status + "}";
+    }
 }

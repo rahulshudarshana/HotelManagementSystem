@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class ReportService {
+    private static final Logger LOGGER = Logger.getLogger(ReportService.class.getName());
     private final ReportDAO reportDAO;
 
     public ReportService() {

@@ -1,8 +1,11 @@
 package com.hotelmanagement.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class CheckIn {
+public class CheckIn implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int checkInID;
     private int reservationID;
     private int guestID;
@@ -49,4 +52,22 @@ public class CheckIn {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CheckIn checkIn = (CheckIn) o;
+        return checkInID == checkIn.checkInID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(checkInID);
+    }
+
+    @Override
+    public String toString() {
+        return "CheckIn{checkInID=" + checkInID + ", reservationID=" + reservationID + ", guestID=" + guestID + "}";
+    }
 }

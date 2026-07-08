@@ -1,5 +1,7 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Guest;
 import com.hotelmanagement.model.enums.Gender;
 import com.hotelmanagement.service.GuestService;
@@ -44,8 +46,14 @@ public class GuestController {
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "Guest added successfully.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(GuestController.class.getName()).log(Level.SEVERE, "Database error adding guest", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(GuestController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -71,8 +79,14 @@ public class GuestController {
                 clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "Guest updated successfully.");
             }
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(GuestController.class.getName()).log(Level.SEVERE, "Database error updating guest", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(GuestController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -90,8 +104,12 @@ public class GuestController {
                 loadTable();
                 clearForm();
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(GuestController.class.getName()).log(Level.SEVERE, "Database error deleting guest", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(GuestController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 

@@ -4,8 +4,10 @@ import com.hotelmanagement.dao.EmployeeDAO;
 import com.hotelmanagement.model.Employee;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class EmployeeService {
+    private static final Logger LOGGER = Logger.getLogger(EmployeeService.class.getName());
     private final EmployeeDAO employeeDAO;
 
     public EmployeeService() {
@@ -26,6 +28,10 @@ public class EmployeeService {
 
     public List<Employee> getEmployeesByDepartment(int departmentID) throws SQLException {
         return employeeDAO.getEmployeesByDepartment(departmentID);
+    }
+
+    public List<Employee> searchEmployees(String keyword) throws SQLException {
+        return employeeDAO.searchEmployees(keyword);
     }
 
     public int createEmployee(Employee employee) throws SQLException {

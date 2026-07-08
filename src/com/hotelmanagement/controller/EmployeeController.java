@@ -1,5 +1,7 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Employee;
 import com.hotelmanagement.model.enums.Gender;
 import com.hotelmanagement.service.EmployeeService;
@@ -54,8 +56,14 @@ public class EmployeeController {
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "Employee added successfully.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Database error adding employee", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -81,8 +89,14 @@ public class EmployeeController {
                 clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "Employee updated.");
             }
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Database error updating employee", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -96,19 +110,19 @@ public class EmployeeController {
                 loadTable();
                 clearForm();
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Database error deleting employee", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
     private void searchEmployees() {
         try {
-            String keyword = view.getTxtSearch().getText().trim().toLowerCase();
-            List<Employee> all = service.getAllEmployees();
-            List<Employee> filtered = all.stream()
-                .filter(e -> e.getFirstName().toLowerCase().contains(keyword) || e.getLastName().toLowerCase().contains(keyword) || e.getEmployeeNumber().contains(keyword))
-                .toList();
-            populateTable(filtered);
+            String keyword = view.getTxtSearch().getText().trim();
+            populateTable(service.searchEmployees(keyword));
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
         }

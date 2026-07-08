@@ -6,8 +6,10 @@ import com.hotelmanagement.model.enums.TaskStatus;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class HousekeepingService {
+    private static final Logger LOGGER = Logger.getLogger(HousekeepingService.class.getName());
     private final HousekeepingDAO housekeepingDAO;
 
     public HousekeepingService() {
@@ -36,6 +38,10 @@ public class HousekeepingService {
 
     public List<Housekeeping> getAllTasks() throws SQLException {
         return housekeepingDAO.getAllTasks();
+    }
+
+    public List<Housekeeping> searchTasks(String keyword) throws SQLException {
+        return housekeepingDAO.searchTasks(keyword);
     }
 
     public int createTask(Housekeeping task) throws SQLException {

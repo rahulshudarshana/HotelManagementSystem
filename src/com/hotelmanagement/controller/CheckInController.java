@@ -1,5 +1,7 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.CheckIn;
 import com.hotelmanagement.service.CheckInService;
 import com.hotelmanagement.view.checkin.checkinpanel;
@@ -42,19 +44,21 @@ public class CheckInController {
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "Check-in successful.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(CheckInController.class.getName()).log(Level.SEVERE, "Database error during check-in", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(CheckInController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
     private void search() {
         try {
             String keyword = view.getTxtReservationID().getText().trim();
-            List<CheckIn> all = service.getAllCheckIns();
-            List<CheckIn> filtered = all.stream()
-                .filter(c -> String.valueOf(c.getReservationID()).contains(keyword))
-                .toList();
-            populateTable(filtered);
+            populateTable(service.searchCheckIns(keyword));
         } catch (SQLException ex) {
             Logger.getLogger(CheckInController.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -1,9 +1,13 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
+import com.hotelmanagement.model.CheckOut;
 import com.hotelmanagement.service.CheckOutService;
 import com.hotelmanagement.view.checkout.checkoutpanel;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,8 +37,14 @@ public class CheckOutController {
             service.performCheckOut(reservationID, additionalCharges, notes, null);
             javax.swing.JOptionPane.showMessageDialog(view, "Check-out successful.");
             clearForm();
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(CheckOutController.class.getName()).log(Level.SEVERE, "Database error during check-out", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(CheckOutController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -54,12 +64,9 @@ public class CheckOutController {
     private void search() {
         try {
             String keyword = view.getTxtSearch().getText().trim();
-            var all = service.getAllCheckOuts();
-            var filtered = all.stream()
-                .filter(c -> String.valueOf(c.getReservationID()).contains(keyword))
-                .toList();
+            List<CheckOut> results = service.searchCheckOuts(keyword);
             var model = new javax.swing.table.DefaultTableModel(new String[]{"ID", "Reservation", "Guest", "Room", "Total"}, 0);
-            for (var c : filtered) {
+            for (CheckOut c : results) {
                 model.addRow(new Object[]{c.getCheckOutID(), c.getReservationID(), c.getGuestID(), c.getRoomID(), c.getTotalAmount()});
             }
             view.getTable().setModel(model);

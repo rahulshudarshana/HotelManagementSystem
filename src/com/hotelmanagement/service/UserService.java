@@ -4,8 +4,10 @@ import com.hotelmanagement.dao.UserDAO;
 import com.hotelmanagement.model.User;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class UserService {
+    private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
     private final UserDAO userDAO;
 
     public UserService() {
@@ -22,6 +24,10 @@ public class UserService {
 
     public List<User> getAllUsers() throws SQLException {
         return userDAO.getAllUsers();
+    }
+
+    public List<User> searchUsers(String keyword) throws SQLException {
+        return userDAO.searchUsers(keyword);
     }
 
     public int createUser(User user) throws SQLException {

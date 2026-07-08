@@ -1,9 +1,12 @@
 package com.hotelmanagement.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Payment {
+public class Payment implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int paymentID;
     private int invoiceID;
     private BigDecimal amount;
@@ -49,4 +52,22 @@ public class Payment {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Payment payment = (Payment) o;
+        return paymentID == payment.paymentID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(paymentID);
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{paymentID=" + paymentID + ", invoiceID=" + invoiceID + ", amount=" + amount + "}";
+    }
 }

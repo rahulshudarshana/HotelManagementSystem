@@ -1,5 +1,7 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Bill;
 import com.hotelmanagement.model.Payment;
 import com.hotelmanagement.model.enums.PaymentStatus;
@@ -68,19 +70,21 @@ public class BillingController {
             paymentService.recordPayment(payment);
             loadTable();
             javax.swing.JOptionPane.showMessageDialog(view, "Payment processed successfully.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, "Database error processing payment", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
     private void search() {
         try {
             String keyword = view.getTxtSearchID().getText().trim();
-            List<Bill> all = billingService.getAllInvoices();
-            List<Bill> filtered = all.stream()
-                .filter(b -> String.valueOf(b.getInvoiceID()).contains(keyword) || (b.getInvoiceNumber() != null && b.getInvoiceNumber().contains(keyword)))
-                .toList();
-            populateTable(filtered);
+            populateTable(billingService.searchInvoices(keyword));
         } catch (SQLException ex) {
             Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, null, ex);
         }

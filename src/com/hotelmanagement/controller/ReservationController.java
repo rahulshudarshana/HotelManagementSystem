@@ -1,12 +1,16 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Reservation;
 import com.hotelmanagement.model.enums.ReservationStatus;
 import com.hotelmanagement.service.ReservationService;
 import com.hotelmanagement.view.reservation.ReservationManagementPanel;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,17 +38,61 @@ public class ReservationController {
 
     private void addReservation() {
         try {
+            if (view.getCmbGuest().getSelectedItem() == null) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please select a guest.");
+                return;
+            }
+            if (view.getCmbRoom().getSelectedItem() == null) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please select a room.");
+                return;
+            }
+            String guestsText = view.getTxtNumberOfGuests().getText().trim();
+            if (guestsText.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please enter the number of guests.");
+                return;
+            }
+            int numberOfGuests = Integer.parseInt(guestsText);
+            if (numberOfGuests <= 0) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Number of guests must be greater than zero.");
+                return;
+            }
+            Date checkInDate = view.getDpCheckIn().getDate();
+            if (checkInDate == null) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please select a check-in date.");
+                return;
+            }
+            Date checkOutDate = view.getDpCheckOut().getDate();
+            if (checkOutDate == null) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please select a check-out date.");
+                return;
+            }
+            LocalDate checkIn = checkInDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate checkOut = checkOutDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (!checkOut.isAfter(checkIn)) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Check-out date must be after check-in date.");
+                return;
+            }
+
             Reservation r = new Reservation();
             r.setGuestID(Integer.parseInt(view.getCmbGuest().getSelectedItem().toString().split("-")[0].trim()));
             r.setRoomID(Integer.parseInt(view.getCmbRoom().getSelectedItem().toString().split("-")[0].trim()));
-            r.setNumberOfGuests(Integer.parseInt(view.getTxtNumberOfGuests().getText().trim()));
+            r.setCheckInDate(checkIn);
+            r.setCheckOutDate(checkOut);
+            r.setNumberOfGuests(numberOfGuests);
+            r.setStatus(mapStatus((String) view.getCmbStatus().getSelectedItem()));
             r.setSpecialRequests(view.getTxtSpecialRequests().getText().trim());
             service.createReservation(r);
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "Reservation created successfully.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, "Database error creating reservation", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -57,14 +105,20 @@ public class ReservationController {
             if (r != null) {
                 r.setNumberOfGuests(Integer.parseInt(view.getTxtNumberOfGuests().getText().trim()));
                 r.setSpecialRequests(view.getTxtSpecialRequests().getText().trim());
-                r.setStatus(ReservationStatus.valueOf((String) view.getCmbStatus().getSelectedItem()));
+                r.setStatus(mapStatus((String) view.getCmbStatus().getSelectedItem()));
                 service.updateReservation(r);
                 loadTable();
                 clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "Reservation updated.");
             }
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, "Database error updating reservation", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -77,17 +131,34 @@ public class ReservationController {
                 service.updateReservationStatus(id, ReservationStatus.Cancelled);
                 loadTable();
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, "Database error cancelling reservation", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
+    }
+
+    private ReservationStatus mapStatus(String displayText) {
+        if (displayText == null) return ReservationStatus.Pending;
+        return switch (displayText) {
+            case "Checked In" -> ReservationStatus.CheckedIn;
+            case "Checked Out" -> ReservationStatus.CheckedOut;
+            default -> {
+                try {
+                    yield ReservationStatus.valueOf(displayText);
+                } catch (IllegalArgumentException e) {
+                    yield ReservationStatus.Pending;
+                }
+            }
+        };
     }
 
     private void searchReservations() {
         try {
             String keyword = view.getTxtSearch().getText().trim();
-            List<Reservation> all = service.getAllReservations();
-            List<Reservation> filtered = all.stream().filter(r -> String.valueOf(r.getReservationID()).contains(keyword)).toList();
-            populateTable(filtered);
+            populateTable(service.searchReservations(keyword));
         } catch (SQLException ex) {
             Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -117,6 +188,8 @@ public class ReservationController {
         view.getTxtNumberOfGuests().setText("");
         view.getTxtSpecialRequests().setText("");
         view.getTxtSearch().setText("");
+        view.getDpCheckIn().setDate(null);
+        view.getDpCheckOut().setDate(null);
     }
 
     private void navigateBack() {

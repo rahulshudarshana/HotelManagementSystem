@@ -1,10 +1,13 @@
 package com.hotelmanagement.model;
 
 import com.hotelmanagement.model.enums.TaskStatus;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Housekeeping {
+public class Housekeeping implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int taskID;
     private int roomID;
     private Integer assignedEmployeeID;
@@ -63,4 +66,22 @@ public class Housekeeping {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Housekeeping that = (Housekeeping) o;
+        return taskID == that.taskID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(taskID);
+    }
+
+    @Override
+    public String toString() {
+        return "Housekeeping{taskID=" + taskID + ", roomID=" + roomID + ", taskType='" + taskType + "', status=" + status + "}";
+    }
 }

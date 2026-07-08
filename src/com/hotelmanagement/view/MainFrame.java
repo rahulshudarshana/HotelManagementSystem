@@ -1,5 +1,16 @@
 package com.hotelmanagement.view;
 
+import com.hotelmanagement.controller.BillingController;
+import com.hotelmanagement.controller.CheckInController;
+import com.hotelmanagement.controller.CheckOutController;
+import com.hotelmanagement.controller.DashboardController;
+import com.hotelmanagement.controller.EmployeeController;
+import com.hotelmanagement.controller.GuestController;
+import com.hotelmanagement.controller.HousekeepingController;
+import com.hotelmanagement.controller.ReportController;
+import com.hotelmanagement.controller.ReservationController;
+import com.hotelmanagement.controller.RoomController;
+import com.hotelmanagement.controller.UserController;
 import com.hotelmanagement.view.billing.billingpanel;
 import com.hotelmanagement.view.checkin.checkinpanel;
 import com.hotelmanagement.view.checkout.checkoutpanel;
@@ -17,6 +28,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private final CardLayout cardLayout;
     private final javax.swing.JPanel cardPanel;
+    private final DashboardPanel dashboardPanel;
+    private final GuestManagementPanel guestPanel;
+    private final RoomManagementPanel roomPanel;
+    private final ReservationManagementPanel reservationPanel;
+    private final checkinpanel checkinPanel;
+    private final checkoutpanel checkoutPanel;
+    private final billingpanel billingPanel;
+    private final employeemanagementpanel employeePanel;
+    private final reportpanel reportPanel;
+    private final usermanagementpanel userPanel;
+    private final housekeepingpanel housekeepingPanel;
     public static final String PANEL_DASHBOARD = "dashboard";
     public static final String PANEL_GUEST = "guest";
     public static final String PANEL_ROOM = "room";
@@ -30,20 +52,43 @@ public class MainFrame extends javax.swing.JFrame {
     public static final String PANEL_HOUSEKEEPING = "housekeeping";
 
     public MainFrame(DashboardPanel dashboardPanel) {
+        this.dashboardPanel = dashboardPanel;
+        guestPanel = new GuestManagementPanel();
+        roomPanel = new RoomManagementPanel();
+        reservationPanel = new ReservationManagementPanel();
+        checkinPanel = new checkinpanel();
+        checkoutPanel = new checkoutpanel();
+        billingPanel = new billingpanel();
+        employeePanel = new employeemanagementpanel();
+        reportPanel = new reportpanel();
+        userPanel = new usermanagementpanel();
+        housekeepingPanel = new housekeepingpanel();
+
         cardLayout = new CardLayout();
         cardPanel = new javax.swing.JPanel(cardLayout);
 
-        cardPanel.add(dashboardPanel, PANEL_DASHBOARD);
-        cardPanel.add(new GuestManagementPanel(), PANEL_GUEST);
-        cardPanel.add(new RoomManagementPanel(), PANEL_ROOM);
-        cardPanel.add(new ReservationManagementPanel(), PANEL_RESERVATION);
-        cardPanel.add(new checkinpanel(), PANEL_CHECKIN);
-        cardPanel.add(new checkoutpanel(), PANEL_CHECKOUT);
-        cardPanel.add(new billingpanel(), PANEL_BILLING);
-        cardPanel.add(new employeemanagementpanel(), PANEL_EMPLOYEE);
-        cardPanel.add(new reportpanel(), PANEL_REPORT);
-        cardPanel.add(new usermanagementpanel(), PANEL_USER);
-        cardPanel.add(new housekeepingpanel(), PANEL_HOUSEKEEPING);
+        cardPanel.add(this.dashboardPanel, PANEL_DASHBOARD);
+        cardPanel.add(guestPanel, PANEL_GUEST);
+        cardPanel.add(roomPanel, PANEL_ROOM);
+        cardPanel.add(reservationPanel, PANEL_RESERVATION);
+        cardPanel.add(checkinPanel, PANEL_CHECKIN);
+        cardPanel.add(checkoutPanel, PANEL_CHECKOUT);
+        cardPanel.add(billingPanel, PANEL_BILLING);
+        cardPanel.add(employeePanel, PANEL_EMPLOYEE);
+        cardPanel.add(reportPanel, PANEL_REPORT);
+        cardPanel.add(userPanel, PANEL_USER);
+        cardPanel.add(housekeepingPanel, PANEL_HOUSEKEEPING);
+
+        new GuestController(guestPanel);
+        new RoomController(roomPanel);
+        new ReservationController(reservationPanel);
+        new CheckInController(checkinPanel);
+        new CheckOutController(checkoutPanel);
+        new BillingController(billingPanel);
+        new EmployeeController(employeePanel);
+        new UserController(userPanel);
+        new HousekeepingController(housekeepingPanel);
+        new ReportController(reportPanel);
 
         initComponents();
     }

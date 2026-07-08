@@ -29,6 +29,8 @@ public class DashboardController {
         view.getBtnBilling().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_BILLING));
         view.getBtnEmployee().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_EMPLOYEE));
         view.getBtnReports().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_REPORT));
+        view.getBtnUser().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_USER));
+        view.getBtnHousekeeping().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_HOUSEKEEPING));
         view.getBtnLogout().addActionListener(e -> logout());
     }
 

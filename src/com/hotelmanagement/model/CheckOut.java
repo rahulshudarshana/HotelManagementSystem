@@ -1,9 +1,12 @@
 package com.hotelmanagement.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class CheckOut {
+public class CheckOut implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int checkOutID;
     private int reservationID;
     private int checkInID;
@@ -65,4 +68,22 @@ public class CheckOut {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CheckOut checkOut = (CheckOut) o;
+        return checkOutID == checkOut.checkOutID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(checkOutID);
+    }
+
+    @Override
+    public String toString() {
+        return "CheckOut{checkOutID=" + checkOutID + ", reservationID=" + reservationID + ", totalAmount=" + totalAmount + "}";
+    }
 }

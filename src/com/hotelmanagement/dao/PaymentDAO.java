@@ -1,89 +1,53 @@
 package com.hotelmanagement.dao;
 
-import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.model.Payment;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-public class PaymentDAO {
+public class PaymentDAO extends BaseDAO<Payment> {
+
+    private static final Logger LOGGER = Logger.getLogger(PaymentDAO.class.getName());
+
+    private static final String COLUMNS = "PaymentID, InvoiceID, Amount, PaymentMethodID, PaymentDate, ReferenceNumber, Notes, ProcessedBy, CreatedAt";
+    private static final String SQL_BY_ID = "SELECT " + COLUMNS + " FROM Payments WHERE PaymentID = ?";
+    private static final String SQL_BY_INVOICE = "SELECT " + COLUMNS + " FROM Payments WHERE InvoiceID = ? ORDER BY PaymentDate DESC";
+    private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM Payments ORDER BY PaymentDate DESC";
+    private static final String SQL_INSERT = "INSERT INTO Payments (InvoiceID, Amount, PaymentMethodID, ReferenceNumber, Notes, ProcessedBy) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SQL_DELETE = "DELETE FROM Payments WHERE PaymentID = ?";
 
     public Payment getPaymentById(int paymentID) throws SQLException {
-        String sql = "SELECT * FROM Payments WHERE PaymentID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, paymentID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapPayment(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_ID, paymentID);
     }
 
     public List<Payment> getPaymentsByInvoice(int invoiceID) throws SQLException {
-        List<Payment> payments = new ArrayList<>();
-        String sql = "SELECT * FROM Payments WHERE InvoiceID = ? ORDER BY PaymentDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, invoiceID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    payments.add(mapPayment(rs));
-                }
-            }
-        }
-        return payments;
+        return findAll(SQL_BY_INVOICE, invoiceID);
     }
 
     public List<Payment> getAllPayments() throws SQLException {
-        List<Payment> payments = new ArrayList<>();
-        String sql = "SELECT * FROM Payments ORDER BY PaymentDate DESC";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                payments.add(mapPayment(rs));
-            }
-        }
-        return payments;
+        return findAll(SQL_ALL);
     }
 
     public int insertPayment(Payment payment) throws SQLException {
-        String sql = "INSERT INTO Payments (InvoiceID, Amount, PaymentMethodID, ReferenceNumber, Notes, ProcessedBy) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, payment.getInvoiceID());
-            stmt.setBigDecimal(2, payment.getAmount());
-            stmt.setInt(3, payment.getPaymentMethodID());
-            stmt.setString(4, payment.getReferenceNumber());
-            stmt.setString(5, payment.getNotes());
-            stmt.setObject(6, payment.getProcessedBy());
-            stmt.executeUpdate();
-            try (ResultSet keys = stmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
-            }
-        }
-        return -1;
+        return insert(SQL_INSERT,
+            payment.getInvoiceID(), payment.getAmount(), payment.getPaymentMethodID(),
+            payment.getReferenceNumber(), payment.getNotes(), payment.getProcessedBy());
+    }
+
+    public int insertPayment(Payment payment, Connection conn) throws SQLException {
+        return insert(SQL_INSERT, conn,
+            payment.getInvoiceID(), payment.getAmount(), payment.getPaymentMethodID(),
+            payment.getReferenceNumber(), payment.getNotes(), payment.getProcessedBy());
     }
 
     public void deletePayment(int paymentID) throws SQLException {
-        String sql = "DELETE FROM Payments WHERE PaymentID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, paymentID);
-            stmt.executeUpdate();
-        }
+        delete(SQL_DELETE, paymentID);
     }
 
-    private Payment mapPayment(ResultSet rs) throws SQLException {
+    @Override
+    protected Payment mapRow(ResultSet rs) throws SQLException {
         Payment payment = new Payment();
         payment.setPaymentID(rs.getInt("PaymentID"));
         payment.setInvoiceID(rs.getInt("InvoiceID"));

@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class BillingService {
+    private static final Logger LOGGER = Logger.getLogger(BillingService.class.getName());
     private final BillingDAO billingDAO;
 
     public BillingService() {
@@ -39,6 +41,10 @@ public class BillingService {
 
     public List<Bill> getAllInvoices() throws SQLException {
         return billingDAO.getAllInvoices();
+    }
+
+    public List<Bill> searchInvoices(String keyword) throws SQLException {
+        return billingDAO.searchInvoices(keyword);
     }
 
     public int createInvoice(Bill bill) throws SQLException {

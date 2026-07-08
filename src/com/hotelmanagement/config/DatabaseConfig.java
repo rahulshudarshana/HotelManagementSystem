@@ -42,7 +42,7 @@ public class DatabaseConfig {
     private static void setDefaults() {
         url = "jdbc:sqlserver://localhost:1433;databaseName=HotelManagementDB;encrypt=true;trustServerCertificate=true";
         username = "sa";
-        password = "sa123";
+        password = "Sa@12345";
         driverClass = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     }
 

@@ -2,6 +2,7 @@ package com.hotelmanagement.controller;
 
 import com.hotelmanagement.service.AuthService;
 import com.hotelmanagement.model.User;
+import com.hotelmanagement.util.SessionManager;
 import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.dashboard.DashboardPanel;
 import com.hotelmanagement.view.login.LoginView;
@@ -28,6 +29,7 @@ public class LoginController {
             User user = authService.authenticate(username, password);
             if (user != null) {
                 view.showSuccess("Login Successful!");
+                SessionManager.getInstance().login(user);
                 DashboardPanel dashboard = new DashboardPanel();
                 MainFrame mainFrame = new MainFrame(dashboard);
                 new DashboardController(dashboard, mainFrame);

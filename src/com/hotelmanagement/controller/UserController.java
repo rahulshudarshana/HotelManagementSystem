@@ -1,6 +1,9 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.User;
+import com.hotelmanagement.service.AuthService;
 import com.hotelmanagement.service.UserService;
 import com.hotelmanagement.view.user.usermanagementpanel;
 import java.sql.SQLException;
@@ -48,8 +51,14 @@ public class UserController {
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "User created successfully.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Database error creating user", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -68,8 +77,14 @@ public class UserController {
                 clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "User updated.");
             }
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Database error updating user", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -83,8 +98,12 @@ public class UserController {
                 loadTable();
                 clearForm();
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Database error deleting user", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -100,23 +119,23 @@ public class UserController {
             }
             User user = service.getUserById(userID);
             if (user != null) {
-                user.setPasswordHash(newPassword);
+                user.setPasswordHash(AuthService.hashPassword(newPassword));
                 service.updateUser(user);
                 javax.swing.JOptionPane.showMessageDialog(view, "Password reset successfully.");
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Database error resetting password", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
     private void searchUsers() {
         try {
-            String keyword = view.getTxtSearch().getText().trim().toLowerCase();
-            List<User> all = service.getAllUsers();
-            List<User> filtered = all.stream()
-                .filter(u -> u.getUsername().toLowerCase().contains(keyword))
-                .toList();
-            populateTable(filtered);
+            String keyword = view.getTxtSearch().getText().trim();
+            populateTable(service.searchUsers(keyword));
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }

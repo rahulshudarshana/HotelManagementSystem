@@ -1,9 +1,12 @@
 package com.hotelmanagement.model;
 
 import com.hotelmanagement.model.enums.Gender;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Guest {
+public class Guest implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int guestID;
     private String firstName;
     private String lastName;
@@ -51,4 +54,22 @@ public class Guest {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Guest guest = (Guest) o;
+        return guestID == guest.guestID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(guestID);
+    }
+
+    @Override
+    public String toString() {
+        return "Guest{guestID=" + guestID + ", firstName='" + firstName + "', lastName='" + lastName + "'}";
+    }
 }

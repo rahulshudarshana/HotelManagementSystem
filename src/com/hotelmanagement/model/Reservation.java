@@ -1,10 +1,13 @@
 package com.hotelmanagement.model;
 
 import com.hotelmanagement.model.enums.ReservationStatus;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class Reservation {
+public class Reservation implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int reservationID;
     private int guestID;
     private int roomID;
@@ -62,4 +65,22 @@ public class Reservation {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return reservationID == that.reservationID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(reservationID);
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{reservationID=" + reservationID + ", guestID=" + guestID + ", roomID=" + roomID + ", status=" + status + "}";
+    }
 }

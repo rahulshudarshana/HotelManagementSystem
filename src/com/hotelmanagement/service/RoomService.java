@@ -5,8 +5,10 @@ import com.hotelmanagement.model.Room;
 import com.hotelmanagement.model.enums.RoomStatus;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RoomService {
+    private static final Logger LOGGER = Logger.getLogger(RoomService.class.getName());
     private final RoomDAO roomDAO;
 
     public RoomService() {
@@ -35,6 +37,10 @@ public class RoomService {
 
     public List<Room> getAvailableRooms() throws SQLException {
         return roomDAO.getAvailableRooms();
+    }
+
+    public List<Room> searchRooms(String keyword) throws SQLException {
+        return roomDAO.searchRooms(keyword);
     }
 
     public int createRoom(Room room) throws SQLException {

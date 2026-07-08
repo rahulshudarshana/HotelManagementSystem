@@ -1,126 +1,69 @@
 package com.hotelmanagement.dao;
 
-import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.model.User;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-public class UserDAO {
+public class UserDAO extends BaseDAO<User> {
+
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
+
+    private static final String COLUMNS = "UserID, EmployeeID, Username, PasswordHash, RoleID, Status, LastLogin, CreatedAt";
+    private static final String SQL_AUTH = "SELECT " + COLUMNS + " FROM Users WHERE Username = ? AND PasswordHash = ?";
+    private static final String SQL_BY_USERNAME = "SELECT " + COLUMNS + " FROM Users WHERE Username = ?";
+    private static final String SQL_BY_ID = "SELECT " + COLUMNS + " FROM Users WHERE UserID = ?";
+    private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM Users ORDER BY Username";
+    private static final String SQL_INSERT = "INSERT INTO Users (EmployeeID, Username, PasswordHash, RoleID, Status) VALUES (?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = "UPDATE Users SET EmployeeID = ?, Username = ?, PasswordHash = ?, RoleID = ?, Status = ?, LastLogin = ? WHERE UserID = ?";
+    private static final String SQL_UPDATE_LAST_LOGIN = "UPDATE Users SET LastLogin = GETDATE() WHERE UserID = ?";
+    private static final String SQL_DELETE = "DELETE FROM Users WHERE UserID = ?";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM Users WHERE LOWER(Username) LIKE ? ORDER BY Username";
 
     public User authenticate(String username, String passwordHash) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE Username = ? AND PasswordHash = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            stmt.setString(2, passwordHash);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapUser(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_AUTH, username, passwordHash);
     }
 
     public User getUserByUsername(String username) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE Username = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapUser(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_USERNAME, username);
     }
 
     public User getUserById(int userID) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE UserID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, userID);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return mapUser(rs);
-                }
-            }
-        }
-        return null;
+        return findOne(SQL_BY_ID, userID);
     }
 
     public List<User> getAllUsers() throws SQLException {
-        List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM Users ORDER BY Username";
-        try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                users.add(mapUser(rs));
-            }
-        }
-        return users;
+        return findAll(SQL_ALL);
+    }
+
+    public List<User> searchUsers(String keyword) throws SQLException {
+        return findAll(SQL_SEARCH, "%" + keyword.toLowerCase() + "%");
     }
 
     public int insertUser(User user) throws SQLException {
-        String sql = "INSERT INTO Users (EmployeeID, Username, PasswordHash, RoleID, Status) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, user.getEmployeeID());
-            stmt.setString(2, user.getUsername());
-            stmt.setString(3, user.getPasswordHash());
-            stmt.setInt(4, user.getRoleID());
-            stmt.setString(5, user.getStatus() != null ? user.getStatus() : "Active");
-            stmt.executeUpdate();
-            try (ResultSet keys = stmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return keys.getInt(1);
-                }
-            }
-        }
-        return -1;
+        return insert(SQL_INSERT,
+            user.getEmployeeID(), user.getUsername(), user.getPasswordHash(),
+            user.getRoleID(), user.getStatus() != null ? user.getStatus() : "Active");
     }
 
     public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE Users SET EmployeeID = ?, Username = ?, PasswordHash = ?, RoleID = ?, Status = ?, LastLogin = ? WHERE UserID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, user.getEmployeeID());
-            stmt.setString(2, user.getUsername());
-            stmt.setString(3, user.getPasswordHash());
-            stmt.setInt(4, user.getRoleID());
-            stmt.setString(5, user.getStatus());
-            stmt.setObject(6, user.getLastLogin());
-            stmt.setInt(7, user.getUserID());
-            stmt.executeUpdate();
-        }
+        update(SQL_UPDATE,
+            user.getEmployeeID(), user.getUsername(), user.getPasswordHash(),
+            user.getRoleID(), user.getStatus(), user.getLastLogin(), user.getUserID());
     }
 
     public void updateLastLogin(int userID) throws SQLException {
-        String sql = "UPDATE Users SET LastLogin = GETDATE() WHERE UserID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, userID);
-            stmt.executeUpdate();
-        }
+        update(SQL_UPDATE_LAST_LOGIN, userID);
     }
 
     public void deleteUser(int userID) throws SQLException {
-        String sql = "DELETE FROM Users WHERE UserID = ?";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, userID);
-            stmt.executeUpdate();
-        }
+        delete(SQL_DELETE, userID);
     }
 
-    private User mapUser(ResultSet rs) throws SQLException {
+    @Override
+    protected User mapRow(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserID(rs.getInt("UserID"));
         user.setEmployeeID(rs.getInt("EmployeeID"));

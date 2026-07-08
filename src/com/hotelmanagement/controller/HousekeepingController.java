@@ -1,5 +1,7 @@
 package com.hotelmanagement.controller;
 
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Housekeeping;
 import com.hotelmanagement.model.enums.TaskStatus;
 import com.hotelmanagement.service.HousekeepingService;
@@ -50,8 +52,14 @@ public class HousekeepingController {
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "Task assigned successfully.");
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Database error adding task", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -71,8 +79,14 @@ public class HousekeepingController {
                 clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "Task updated.");
             }
+        } catch (ValidationException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
+        } catch (DataAccessException ex) {
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Database error updating task", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -86,8 +100,12 @@ public class HousekeepingController {
                 loadTable();
                 clearForm();
             }
+        } catch (DataAccessException ex) {
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Database error deleting task", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -99,19 +117,19 @@ public class HousekeepingController {
             service.updateTaskStatus(taskID, TaskStatus.Completed);
             loadTable();
             javax.swing.JOptionPane.showMessageDialog(view, "Task marked as completed.");
+        } catch (DataAccessException ex) {
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Database error completing task", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         } catch (Exception ex) {
-            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
     private void searchTasks() {
         try {
             String keyword = view.getTxtSearch().getText().trim();
-            List<Housekeeping> all = service.getAllTasks();
-            List<Housekeeping> filtered = all.stream()
-                .filter(t -> String.valueOf(t.getTaskID()).contains(keyword))
-                .toList();
-            populateTable(filtered);
+            populateTable(service.searchTasks(keyword));
         } catch (SQLException ex) {
             Logger.getLogger(HousekeepingController.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -1,15 +1,22 @@
 package com.hotelmanagement.service;
 
+import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.dao.BillingDAO;
 import com.hotelmanagement.dao.PaymentDAO;
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Bill;
 import com.hotelmanagement.model.Payment;
 import com.hotelmanagement.model.enums.PaymentStatus;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PaymentService {
+    private static final Logger LOGGER = Logger.getLogger(PaymentService.class.getName());
     private final PaymentDAO paymentDAO;
     private final BillingDAO billingDAO;
 
@@ -30,25 +37,50 @@ public class PaymentService {
         return paymentDAO.getAllPayments();
     }
 
-    public int recordPayment(Payment payment) throws SQLException {
+    public int recordPayment(Payment payment) {
         if (payment.getAmount() == null || payment.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Payment amount must be greater than zero.");
+            throw new ValidationException("Payment amount must be greater than zero.");
         }
-        int paymentID = paymentDAO.insertPayment(payment);
-        Bill invoice = billingDAO.getInvoiceById(payment.getInvoiceID());
-        if (invoice != null) {
-            BigDecimal newAmountPaid = invoice.getAmountPaid().add(payment.getAmount());
-            BigDecimal newBalance = invoice.getTotalAmount().subtract(newAmountPaid);
-            PaymentStatus newStatus;
-            if (newBalance.compareTo(BigDecimal.ZERO) <= 0) {
-                newStatus = PaymentStatus.Paid;
-                newBalance = BigDecimal.ZERO;
-            } else {
-                newStatus = PaymentStatus.PartiallyPaid;
+        Connection conn = null;
+        try {
+            conn = DatabaseConfig.getConnection();
+            conn.setAutoCommit(false);
+
+            int paymentID = paymentDAO.insertPayment(payment, conn);
+            Bill invoice = billingDAO.getInvoiceById(payment.getInvoiceID(), conn);
+            if (invoice != null) {
+                BigDecimal newAmountPaid = invoice.getAmountPaid().add(payment.getAmount());
+                BigDecimal newBalance = invoice.getTotalAmount().subtract(newAmountPaid);
+                PaymentStatus newStatus;
+                if (newBalance.compareTo(BigDecimal.ZERO) <= 0) {
+                    newStatus = PaymentStatus.Paid;
+                    newBalance = BigDecimal.ZERO;
+                } else {
+                    newStatus = PaymentStatus.PartiallyPaid;
+                }
+                billingDAO.updateInvoicePayment(payment.getInvoiceID(), newAmountPaid, newBalance, newStatus, conn);
             }
-            billingDAO.updateInvoicePayment(payment.getInvoiceID(), newAmountPaid, newBalance, newStatus);
+
+            conn.commit();
+            return paymentID;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) {
+                    LOGGER.log(Level.SEVERE, "Rollback failed", ex);
+                }
+            }
+            LOGGER.log(Level.SEVERE, "Payment recording failed", e);
+            throw new DataAccessException("Payment recording failed due to a database error.", e);
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, "Failed to restore auto-commit", e);
+                }
+                try { conn.close(); } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, "Failed to close connection", e);
+                }
+            }
         }
-        return paymentID;
     }
 
     public void deletePayment(int id) throws SQLException {

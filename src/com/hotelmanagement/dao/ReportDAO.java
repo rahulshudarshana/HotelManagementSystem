@@ -7,8 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.logging.Logger;
 
 public class ReportDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(ReportDAO.class.getName());
 
     public int getTotalRooms() throws SQLException {
         String sql = "SELECT COUNT(*) FROM Rooms";

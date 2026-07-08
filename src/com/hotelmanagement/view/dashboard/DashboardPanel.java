@@ -47,6 +47,8 @@ public class DashboardPanel extends javax.swing.JPanel {
         btncheckout = new javax.swing.JButton();
         btnbilling = new javax.swing.JButton();
         btnemployee = new javax.swing.JButton();
+        btnUser = new javax.swing.JButton();
+        btnHousekeeping = new javax.swing.JButton();
         btnreports = new javax.swing.JButton();
         btnlogout = new javax.swing.JButton();
 
@@ -104,6 +106,8 @@ public class DashboardPanel extends javax.swing.JPanel {
 
         btnreports.setText("Reports");
 
+        btnUser.setText("User");
+        btnHousekeeping.setText("Housekeeping");
         btnlogout.setText("Logout");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -155,9 +159,13 @@ public class DashboardPanel extends javax.swing.JPanel {
                                 .addComponent(btnbilling)
                                 .addGap(34, 34, 34)
                                 .addComponent(btnemployee)
-                                .addGap(37, 37, 37)
+                                .addGap(30, 30, 30)
+                                .addComponent(btnUser)
+                                .addGap(30, 30, 30)
+                                .addComponent(btnHousekeeping)
+                                .addGap(30, 30, 30)
                                 .addComponent(btnreports)
-                                .addGap(40, 40, 40)
+                                .addGap(30, 30, 30)
                                 .addComponent(btnlogout))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(230, 230, 230)
@@ -189,6 +197,8 @@ public class DashboardPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnbilling)
                     .addComponent(btnemployee)
+                    .addComponent(btnUser)
+                    .addComponent(btnHousekeeping)
                     .addComponent(btnreports)
                     .addComponent(btnlogout))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -226,9 +236,11 @@ public class DashboardPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnemployee;
     private javax.swing.JButton btnguest;
     private javax.swing.JButton btnlogout;
+    private javax.swing.JButton btnHousekeeping;
     private javax.swing.JButton btnreports;
     private javax.swing.JButton btnreservation;
     private javax.swing.JButton btnroom;
+    private javax.swing.JButton btnUser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -254,6 +266,8 @@ public class DashboardPanel extends javax.swing.JPanel {
     public javax.swing.JButton getBtnEmployee() { return btnemployee; }
     public javax.swing.JButton getBtnReports() { return btnreports; }
     public javax.swing.JButton getBtnLogout() { return btnlogout; }
+    public javax.swing.JButton getBtnUser() { return btnUser; }
+    public javax.swing.JButton getBtnHousekeeping() { return btnHousekeeping; }
     public javax.swing.JLabel getLabelTotalRooms() { return jLabel8; }
     public javax.swing.JLabel getLabelAvailable() { return jLabel9; }
     public javax.swing.JLabel getLabelOccupied() { return jLabel10; }
