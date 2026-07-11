@@ -46,6 +46,8 @@ public class reportpanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
+        setBackground(new java.awt.Color(153, 153, 153));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Report Generating");
 
@@ -72,6 +74,7 @@ public class reportpanel extends javax.swing.JPanel {
 
         txtKeyword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btnGenerate.setBackground(new java.awt.Color(153, 255, 153));
         btnGenerate.setText("Generate Report");
         btnGenerate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -79,8 +82,10 @@ public class reportpanel extends javax.swing.JPanel {
             }
         });
 
+        btnExportPDF.setBackground(new java.awt.Color(102, 255, 102));
         btnExportPDF.setText("Export PDF");
 
+        btnExportExcel.setBackground(new java.awt.Color(102, 255, 102));
         btnExportExcel.setText("Export Excel ");
         btnExportExcel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,8 +93,10 @@ public class reportpanel extends javax.swing.JPanel {
             }
         });
 
+        btnprint.setBackground(new java.awt.Color(102, 255, 51));
         btnprint.setText("Print");
 
+        btnclear.setBackground(new java.awt.Color(255, 204, 51));
         btnclear.setText("Clear");
         btnclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,6 +104,7 @@ public class reportpanel extends javax.swing.JPanel {
             }
         });
 
+        btnback.setBackground(new java.awt.Color(255, 204, 51));
         btnback.setText("Back");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(

@@ -2,25 +2,44 @@ package com.hotelmanagement.controller;
 
 import com.hotelmanagement.exception.DataAccessException;
 import com.hotelmanagement.exception.ValidationException;
+import com.hotelmanagement.model.Employee;
 import com.hotelmanagement.model.User;
 import com.hotelmanagement.service.AuthService;
+import com.hotelmanagement.service.EmployeeService;
 import com.hotelmanagement.service.UserService;
+import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.user.usermanagementpanel;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 public class UserController {
     private final usermanagementpanel view;
     private final UserService service;
+    private final EmployeeService employeeService;
 
     public UserController(usermanagementpanel view) {
         this.view = view;
         this.service = new UserService();
+        this.employeeService = new EmployeeService();
+        loadComboBoxes();
         initControllers();
         loadTable();
+    }
+
+    private void loadComboBoxes() {
+        try {
+            view.getCmbEmployee().removeAllItems();
+            for (Employee e : employeeService.getAllEmployees()) {
+                view.getCmbEmployee().addItem(e.getEmployeeID() + " - " + e.getFirstName() + " " + e.getLastName());
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Failed to load employees", ex);
+        }
     }
 
     private void initControllers() {
@@ -31,6 +50,23 @@ public class UserController {
         view.getBtnSearch().addActionListener(e -> searchUsers());
         view.getBtnClear().addActionListener(e -> clearForm());
         view.getBtnBack().addActionListener(e -> navigateBack());
+
+        view.getTable().getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int row = view.getTable().getSelectedRow();
+                if (row >= 0) {
+                    try {
+                        int id = (int) view.getTable().getValueAt(row, 0);
+                        User user = service.getUserById(id);
+                        if (user != null) {
+                            populateForm(user);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Failed to load user for selection", ex);
+                    }
+                }
+            }
+        });
     }
 
     private void addUser() {
@@ -39,6 +75,10 @@ public class UserController {
             String confirm = view.getTxtConfirmPassword().getText().trim();
             if (!password.equals(confirm)) {
                 javax.swing.JOptionPane.showMessageDialog(view, "Passwords do not match.");
+                return;
+            }
+            if (view.getCmbEmployee().getSelectedItem() == null) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please select an employee.");
                 return;
             }
             User user = new User();
@@ -66,15 +106,23 @@ public class UserController {
         try {
             int selectedRow = view.getTable().getSelectedRow();
             if (selectedRow < 0) return;
+            String username = view.getTxtUsername().getText().trim();
+            if (username.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Username is required.");
+                return;
+            }
             int userID = (int) view.getTable().getValueAt(selectedRow, 0);
             User user = service.getUserById(userID);
             if (user != null) {
-                user.setUsername(view.getTxtUsername().getText().trim());
+                user.setUsername(username);
+                if (view.getCmbEmployee().getSelectedItem() != null) {
+                    String empId = view.getCmbEmployee().getSelectedItem().toString().split("-")[0].trim();
+                    user.setEmployeeID(Integer.parseInt(empId));
+                }
                 user.setRoleID(view.getCmbRole().getSelectedIndex() + 1);
                 user.setStatus((String) view.getCmbStatus().getSelectedItem());
                 service.updateUser(user);
                 loadTable();
-                clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "User updated.");
             }
         } catch (ValidationException ex) {
@@ -121,6 +169,8 @@ public class UserController {
             if (user != null) {
                 user.setPasswordHash(AuthService.hashPassword(newPassword));
                 service.updateUser(user);
+                loadTable();
+                clearForm();
                 javax.swing.JOptionPane.showMessageDialog(view, "Password reset successfully.");
             }
         } catch (DataAccessException ex) {
@@ -137,22 +187,35 @@ public class UserController {
             String keyword = view.getTxtSearch().getText().trim();
             populateTable(service.searchUsers(keyword));
         } catch (SQLException ex) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Failed to search users", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 
     private void loadTable() {
         try {
+            loadComboBoxes();
             populateTable(service.getAllUsers());
         } catch (SQLException ex) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, "Failed to load users", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 
     private void populateTable(List<User> users) {
-        DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Username", "Employee ID", "Role", "Status"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new String[]{"ID", "Username", "Employee", "Role", "Status"}, 0);
         for (User u : users) {
-            model.addRow(new Object[]{u.getUserID(), u.getUsername(), u.getEmployeeID(), u.getRoleID(), u.getStatus()});
+            String empName = "";
+            for (int i = 0; i < view.getCmbEmployee().getItemCount(); i++) {
+                String item = view.getCmbEmployee().getItemAt(i);
+                if (item.startsWith(u.getEmployeeID() + " - ")) {
+                    empName = item.substring(item.indexOf(" - ") + 3);
+                    break;
+                }
+            }
+            String roleName = u.getRoleID() > 0 && u.getRoleID() <= view.getCmbRole().getItemCount()
+                ? view.getCmbRole().getItemAt(u.getRoleID() - 1) : "Unknown";
+            model.addRow(new Object[]{u.getUserID(), u.getUsername(), empName, roleName, u.getStatus()});
         }
         view.getTable().setModel(model);
     }
@@ -165,7 +228,27 @@ public class UserController {
         view.getTxtSearch().setText("");
     }
 
+    private void populateForm(User user) {
+        view.getTxtUsername().setText(user.getUsername() != null ? user.getUsername() : "");
+        view.getTxtPassword().setText("");
+        view.getTxtConfirmPassword().setText("");
+        view.getCmbRole().setSelectedIndex(Math.max(0, user.getRoleID() - 1));
+        if (user.getStatus() != null) {
+            view.getCmbStatus().setSelectedItem(user.getStatus());
+        }
+        for (int i = 0; i < view.getCmbEmployee().getItemCount(); i++) {
+            String item = view.getCmbEmployee().getItemAt(i);
+            if (item.startsWith(user.getEmployeeID() + " - ")) {
+                view.getCmbEmployee().setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+
     private void navigateBack() {
-        javax.swing.SwingUtilities.getWindowAncestor(view).dispose();
+        MainFrame mainFrame = (MainFrame) javax.swing.SwingUtilities.getWindowAncestor(view);
+        if (mainFrame != null) {
+            mainFrame.navigateTo(MainFrame.PANEL_DASHBOARD);
+        }
     }
 }

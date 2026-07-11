@@ -1,8 +1,10 @@
 package com.hotelmanagement.controller;
 
 import com.hotelmanagement.service.ReportService;
+import com.hotelmanagement.util.SessionManager;
 import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.dashboard.DashboardPanel;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +37,7 @@ public class DashboardController {
     }
 
     private void logout() {
+        SessionManager.getInstance().logout();
         mainFrame.dispose();
         new com.hotelmanagement.view.login.LoginView().setVisible(true);
     }
@@ -46,9 +49,16 @@ public class DashboardController {
             view.getLabelOccupied().setText(String.valueOf(reportService.getOccupiedRooms()));
             view.getLabelCheckIns().setText(String.valueOf(reportService.getCheckInsToday()));
             view.getLabelCheckOuts().setText(String.valueOf(reportService.getCheckOutsToday()));
-            view.getLabelRevenue().setText("$" + reportService.getRevenueToday().toString());
+            BigDecimal revenue = reportService.getRevenueToday();
+            view.getLabelRevenue().setText("$" + (revenue != null ? revenue.setScale(2, java.math.RoundingMode.HALF_UP).toString() : "0.00"));
         } catch (SQLException ex) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Failed to load dashboard stats", ex);
+            view.getLabelTotalRooms().setText("Error");
+            view.getLabelAvailable().setText("Error");
+            view.getLabelOccupied().setText("Error");
+            view.getLabelCheckIns().setText("Error");
+            view.getLabelCheckOuts().setText("Error");
+            view.getLabelRevenue().setText("$Error");
         }
     }
 }

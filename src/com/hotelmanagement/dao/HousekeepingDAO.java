@@ -21,11 +21,11 @@ public class HousekeepingDAO extends BaseDAO<Housekeeping> {
     private static final String SQL_BY_DATE = "SELECT " + COLUMNS + " FROM HousekeepingTasks WHERE ScheduledDate = ? ORDER BY Priority";
     private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM HousekeepingTasks ORDER BY ScheduledDate DESC";
     private static final String SQL_INSERT = "INSERT INTO HousekeepingTasks (RoomID, AssignedEmployeeID, TaskType, Priority, Status, ScheduledDate, Notes, CreatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE = "UPDATE HousekeepingTasks SET RoomID = ?, AssignedEmployeeID = ?, TaskType = ?, Priority = ?, Status = ?, ScheduledDate = ?, CompletionDate = ?, Notes = ?, UpdatedAt = GETDATE() WHERE TaskID = ?";
-    private static final String SQL_UPDATE_STATUS = "UPDATE HousekeepingTasks SET Status = ?, UpdatedAt = GETDATE() WHERE TaskID = ?";
-    private static final String SQL_UPDATE_STATUS_COMPLETED = "UPDATE HousekeepingTasks SET Status = ?, CompletionDate = GETDATE(), UpdatedAt = GETDATE() WHERE TaskID = ?";
+    private static final String SQL_UPDATE = "UPDATE HousekeepingTasks SET RoomID = ?, AssignedEmployeeID = ?, TaskType = ?, Priority = ?, Status = ?, ScheduledDate = ?, CompletionDate = ?, Notes = ?, UpdatedAt = NOW() WHERE TaskID = ?";
+    private static final String SQL_UPDATE_STATUS = "UPDATE HousekeepingTasks SET Status = ?, UpdatedAt = NOW() WHERE TaskID = ?";
+    private static final String SQL_UPDATE_STATUS_COMPLETED = "UPDATE HousekeepingTasks SET Status = ?, CompletionDate = NOW(), UpdatedAt = NOW() WHERE TaskID = ?";
     private static final String SQL_DELETE = "DELETE FROM HousekeepingTasks WHERE TaskID = ?";
-    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM HousekeepingTasks WHERE CAST(TaskID AS NVARCHAR) LIKE ? ORDER BY ScheduledDate DESC";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM HousekeepingTasks WHERE CAST(TaskID AS CHAR) LIKE ? ORDER BY ScheduledDate DESC";
 
     public Housekeeping getTaskById(int taskID) throws SQLException {
         return findOne(SQL_BY_ID, taskID);

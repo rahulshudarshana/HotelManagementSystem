@@ -13,8 +13,7 @@ public class ReportDAO {
 
     private static final Logger LOGGER = Logger.getLogger(ReportDAO.class.getName());
 
-    public int getTotalRooms() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Rooms";
+    private int queryInt(String sql) throws SQLException {
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -23,118 +22,11 @@ public class ReportDAO {
         return 0;
     }
 
-    public int getAvailableRoomsCount() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Rooms WHERE Status = 'Available'";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
+    private int queryCountByStatus(String table, String column, String status) throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM " + table + " WHERE " + column + " = '" + status + "'");
     }
 
-    public int getOccupiedRoomsCount() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Rooms WHERE Status = 'Occupied'";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getReservedRoomsCount() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Rooms WHERE Status = 'Reserved'";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getMaintenanceRoomsCount() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Rooms WHERE Status = 'Maintenance'";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getCleaningRoomsCount() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Rooms WHERE Status = 'Cleaning'";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getTotalGuests() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Guests";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getTotalEmployees() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Employees";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getTotalReservations() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Reservations";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getActiveReservationsCount() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM Reservations WHERE Status IN ('Pending', 'Confirmed', 'CheckedIn')";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getCheckInsToday() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM CheckIns WHERE CAST(ActualCheckInDate AS DATE) = CAST(GETDATE() AS DATE)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public int getCheckOutsToday() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM CheckOuts WHERE CAST(ActualCheckOutDate AS DATE) = CAST(GETDATE() AS DATE)";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
-    }
-
-    public BigDecimal getTotalRevenueToday() throws SQLException {
-        String sql = "SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE CAST(ActualCheckOutDate AS DATE) = CAST(GETDATE() AS DATE)";
+    private BigDecimal queryBigDecimal(String sql) throws SQLException {
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -143,8 +35,60 @@ public class ReportDAO {
         return BigDecimal.ZERO;
     }
 
+    public int getTotalRooms() throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM Rooms");
+    }
+
+    public int getAvailableRoomsCount() throws SQLException {
+        return queryCountByStatus("Rooms", "Status", "Available");
+    }
+
+    public int getOccupiedRoomsCount() throws SQLException {
+        return queryCountByStatus("Rooms", "Status", "Occupied");
+    }
+
+    public int getReservedRoomsCount() throws SQLException {
+        return queryCountByStatus("Rooms", "Status", "Reserved");
+    }
+
+    public int getMaintenanceRoomsCount() throws SQLException {
+        return queryCountByStatus("Rooms", "Status", "Maintenance");
+    }
+
+    public int getCleaningRoomsCount() throws SQLException {
+        return queryCountByStatus("Rooms", "Status", "Cleaning");
+    }
+
+    public int getTotalGuests() throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM Guests");
+    }
+
+    public int getTotalEmployees() throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM Employees");
+    }
+
+    public int getTotalReservations() throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM Reservations");
+    }
+
+    public int getActiveReservationsCount() throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM Reservations WHERE Status IN ('Pending', 'Confirmed', 'CheckedIn')");
+    }
+
+    public int getCheckInsToday() throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM CheckIns WHERE DATE(ActualCheckInDate) = CURDATE()");
+    }
+
+    public int getCheckOutsToday() throws SQLException {
+        return queryInt("SELECT COUNT(*) FROM CheckOuts WHERE DATE(ActualCheckOutDate) = CURDATE()");
+    }
+
+    public BigDecimal getTotalRevenueToday() throws SQLException {
+        return queryBigDecimal("SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE DATE(ActualCheckOutDate) = CURDATE()");
+    }
+
     public BigDecimal getTotalRevenue(LocalDate from, LocalDate to) throws SQLException {
-        String sql = "SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE CAST(ActualCheckOutDate AS DATE) BETWEEN ? AND ?";
+        String sql = "SELECT COALESCE(SUM(TotalAmount), 0) FROM CheckOuts WHERE DATE(ActualCheckOutDate) BETWEEN ? AND ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, from);
@@ -157,7 +101,7 @@ public class ReportDAO {
     }
 
     public BigDecimal getTotalPayments(LocalDate from, LocalDate to) throws SQLException {
-        String sql = "SELECT COALESCE(SUM(Amount), 0) FROM Payments WHERE CAST(PaymentDate AS DATE) BETWEEN ? AND ?";
+        String sql = "SELECT COALESCE(SUM(Amount), 0) FROM Payments WHERE DATE(PaymentDate) BETWEEN ? AND ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, from);
@@ -170,23 +114,11 @@ public class ReportDAO {
     }
 
     public int getPendingHousekeepingTasks() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM HousekeepingTasks WHERE Status = 'Pending'";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
+        return queryCountByStatus("HousekeepingTasks", "Status", "Pending");
     }
 
     public int getInProgressHousekeepingTasks() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM HousekeepingTasks WHERE Status = 'InProgress'";
-        try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
+        return queryCountByStatus("HousekeepingTasks", "Status", "InProgress");
     }
 
     public BigDecimal getOccupancyRate() throws SQLException {

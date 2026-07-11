@@ -52,6 +52,8 @@ public class GuestManagementPanel extends javax.swing.JPanel {
         btnclear = new javax.swing.JButton();
         btnback = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(153, 153, 153));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Guest Information");
 
@@ -94,6 +96,7 @@ public class GuestManagementPanel extends javax.swing.JPanel {
 
         searchbar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btnsearch.setBackground(new java.awt.Color(102, 255, 102));
         btnsearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnsearch.setText("Search");
 
@@ -110,14 +113,24 @@ public class GuestManagementPanel extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(guestdatatbl);
 
+        jButton1.setBackground(new java.awt.Color(255, 255, 51));
         jButton1.setText("Add");
 
+        btnupdate.setBackground(new java.awt.Color(255, 255, 51));
         btnupdate.setText("Update ");
 
+        btndelete.setBackground(new java.awt.Color(255, 51, 51));
         btndelete.setText("Delete");
+        btndelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btndeleteActionPerformed(evt);
+            }
+        });
 
+        btnclear.setBackground(new java.awt.Color(255, 153, 0));
         btnclear.setText("Clear");
 
+        btnback.setBackground(new java.awt.Color(255, 204, 51));
         btnback.setText("Back");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -218,9 +231,9 @@ public class GuestManagementPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel6)
-                                            .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6))
                                         .addGap(18, 18, 18)
                                         .addComponent(jLabel7))
                                     .addGroup(layout.createSequentialGroup()
@@ -241,6 +254,10 @@ public class GuestManagementPanel extends javax.swing.JPanel {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btndeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndeleteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btndeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

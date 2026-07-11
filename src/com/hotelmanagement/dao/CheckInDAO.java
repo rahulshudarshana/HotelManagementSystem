@@ -18,7 +18,7 @@ public class CheckInDAO extends BaseDAO<CheckIn> {
     private static final String SQL_INSERT = "INSERT INTO CheckIns (ReservationID, GuestID, RoomID, NumberOfGuests, ReceptionistID, Notes) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE CheckIns SET ReservationID = ?, GuestID = ?, RoomID = ?, NumberOfGuests = ?, Notes = ? WHERE CheckInID = ?";
     private static final String SQL_DELETE = "DELETE FROM CheckIns WHERE CheckInID = ?";
-    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM CheckIns WHERE CAST(ReservationID AS NVARCHAR) LIKE ? ORDER BY ActualCheckInDate DESC";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM CheckIns WHERE CAST(ReservationID AS CHAR) LIKE ? ORDER BY ActualCheckInDate DESC";
 
     public CheckIn getCheckInById(int checkInID) throws SQLException {
         return findOne(SQL_BY_ID, checkInID);

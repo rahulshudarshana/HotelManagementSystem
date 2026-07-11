@@ -49,6 +49,8 @@ public class RoomManagementPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
+        setBackground(new java.awt.Color(204, 204, 204));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Room Management");
 
@@ -79,24 +81,35 @@ public class RoomManagementPanel extends javax.swing.JPanel {
         txtPrice.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         cmbRoomType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmbRoomType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single", "Double", "Twin", "Deluxe", "Suite", "Family" }));
+        cmbRoomType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single", "Double", "Triple", "Suite", "Deluxe", "Penthouse" }));
 
         cmbStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Available", "Occupied", "Reserved", "Maintenance", "Cleaning" }));
 
         txtSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btnSearch.setBackground(new java.awt.Color(153, 255, 153));
         btnSearch.setText("Search ");
 
+        btnadd.setBackground(new java.awt.Color(255, 255, 102));
         btnadd.setText("Add");
 
+        btnupdate.setBackground(new java.awt.Color(255, 255, 102));
         btnupdate.setText("Update");
         btnupdate.setToolTipText("");
+        btnupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnupdateActionPerformed(evt);
+            }
+        });
 
+        btndelete.setBackground(new java.awt.Color(255, 102, 102));
         btndelete.setText("Delete");
 
+        btnclear.setBackground(new java.awt.Color(255, 102, 51));
         btnclear.setText("Clear");
 
+        btnback.setBackground(new java.awt.Color(255, 204, 0));
         btnback.setText("Back");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -206,6 +219,10 @@ public class RoomManagementPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnupdateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnupdateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

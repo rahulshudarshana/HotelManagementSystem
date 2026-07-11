@@ -4,6 +4,7 @@ import com.hotelmanagement.exception.DataAccessException;
 import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.CheckOut;
 import com.hotelmanagement.service.CheckOutService;
+import com.hotelmanagement.util.SessionManager;
 import com.hotelmanagement.view.checkout.checkoutpanel;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ public class CheckOutController {
         this.view = view;
         this.service = new CheckOutService();
         initControllers();
+        loadTable();
     }
 
     private void initControllers() {
@@ -30,11 +32,18 @@ public class CheckOutController {
 
     private void checkOut() {
         try {
-            int reservationID = Integer.parseInt(view.getTxtSearch().getText().trim());
+            String searchText = view.getTxtSearch().getText().trim();
+            if (searchText.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please enter a Reservation ID.");
+                return;
+            }
+            int reservationID = Integer.parseInt(searchText);
             BigDecimal additionalCharges = view.getTxtAdditionalCharges().getText().isEmpty()
                 ? BigDecimal.ZERO : new BigDecimal(view.getTxtAdditionalCharges().getText().trim());
             String notes = null;
-            service.performCheckOut(reservationID, additionalCharges, notes, null);
+            Integer processedBy = SessionManager.getInstance().getCurrentUserId();
+            service.performCheckOut(reservationID, additionalCharges, notes, processedBy);
+            search();
             javax.swing.JOptionPane.showMessageDialog(view, "Check-out successful.");
             clearForm();
         } catch (ValidationException ex) {
@@ -65,13 +74,28 @@ public class CheckOutController {
         try {
             String keyword = view.getTxtSearch().getText().trim();
             List<CheckOut> results = service.searchCheckOuts(keyword);
-            var model = new javax.swing.table.DefaultTableModel(new String[]{"ID", "Reservation", "Guest", "Room", "Total"}, 0);
+            javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(new String[]{"ID", "Reservation", "Guest", "Room", "Total"}, 0);
             for (CheckOut c : results) {
                 model.addRow(new Object[]{c.getCheckOutID(), c.getReservationID(), c.getGuestID(), c.getRoomID(), c.getTotalAmount()});
             }
             view.getTable().setModel(model);
         } catch (SQLException ex) {
-            Logger.getLogger(CheckOutController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckOutController.class.getName()).log(Level.SEVERE, "Failed to search check-outs", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
+        }
+    }
+
+    private void loadTable() {
+        try {
+            List<CheckOut> results = service.getAllCheckOuts();
+            javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(new String[]{"ID", "Reservation", "Guest", "Room", "Total"}, 0);
+            for (CheckOut c : results) {
+                model.addRow(new Object[]{c.getCheckOutID(), c.getReservationID(), c.getGuestID(), c.getRoomID(), c.getTotalAmount()});
+            }
+            view.getTable().setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckOutController.class.getName()).log(Level.SEVERE, "Failed to load check-outs", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 

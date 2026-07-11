@@ -4,11 +4,16 @@ import com.hotelmanagement.exception.DataAccessException;
 import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Bill;
 import com.hotelmanagement.model.Payment;
+import com.hotelmanagement.model.Reservation;
 import com.hotelmanagement.model.enums.PaymentStatus;
 import com.hotelmanagement.service.BillingService;
 import com.hotelmanagement.service.PaymentService;
+import com.hotelmanagement.service.ReservationService;
+import com.hotelmanagement.util.SessionManager;
+import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.billing.billingpanel;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,24 +39,63 @@ public class BillingController {
         view.getBtnSearch().addActionListener(e -> search());
         view.getBtnClear().addActionListener(e -> clearForm());
         view.getBtnBack().addActionListener(e -> navigateBack());
+        view.getBtnPrintInvoice().addActionListener(e ->
+            javax.swing.JOptionPane.showMessageDialog(view, "Print functionality is not available in this version."));
     }
 
     private void calculateTotal() {
         try {
-            BigDecimal roomCharges = new BigDecimal(view.getTxtRoomCharges().getText().trim());
+            String reservationIDStr = view.getTxtReservation().getText().trim();
+            if (reservationIDStr.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Please enter a Reservation ID.");
+                return;
+            }
+            int reservationID = Integer.parseInt(reservationIDStr);
+
+            ReservationService reservationService = new ReservationService();
+            Reservation reservation = reservationService.getReservationById(reservationID);
+            if (reservation == null) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Reservation ID not found.");
+                return;
+            }
+
+            String roomChargesText = view.getTxtRoomCharges().getText().trim();
+            if (roomChargesText.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Room charges is required.");
+                return;
+            }
+            BigDecimal roomCharges = new BigDecimal(roomChargesText);
             BigDecimal extra = view.getTxtExtraCharges().getText().isEmpty() ? BigDecimal.ZERO : new BigDecimal(view.getTxtExtraCharges().getText().trim());
-            BigDecimal discount = view.getTxtDiscount().getText().isEmpty() ? BigDecimal.ZERO : new BigDecimal(view.getTxtDiscount().getText().trim());
-            BigDecimal tax = view.getTxtTax().getText().isEmpty() ? BigDecimal.ZERO : new BigDecimal(view.getTxtTax().getText().trim());
+            BigDecimal discountPct = view.getTxtDiscount().getText().isEmpty() ? BigDecimal.ZERO : new BigDecimal(view.getTxtDiscount().getText().trim());
+            BigDecimal taxPct = view.getTxtTax().getText().isEmpty() ? BigDecimal.ZERO : new BigDecimal(view.getTxtTax().getText().trim());
 
-            BigDecimal subtotal = roomCharges.add(extra);
-            BigDecimal discountAmount = subtotal.multiply(discount).divide(BigDecimal.valueOf(100));
-            BigDecimal afterDiscount = subtotal.subtract(discountAmount);
-            BigDecimal taxAmount = afterDiscount.multiply(tax).divide(BigDecimal.valueOf(100));
-            BigDecimal total = afterDiscount.add(taxAmount);
+            Bill bill = new Bill();
+            bill.setReservationID(reservationID);
+            bill.setGuestID(reservation.getGuestID());
+            bill.setRoomCharges(roomCharges);
+            bill.setAdditionalCharges(extra);
+            bill.setDiscount(discountPct);
+            bill.setTax(taxPct);
+            bill.setCreatedBy(SessionManager.getInstance().getCurrentUserId());
 
-            view.getTxtTotalAmount().setText(total.toString());
+            int invoiceID = billingService.createInvoice(bill);
+            Bill saved = billingService.getInvoiceById(invoiceID);
+
+            view.getTxtTotalAmount().setText(saved.getTotalAmount().setScale(2, RoundingMode.HALF_UP).toString());
+            view.getTxtAmountPaid().setText(saved.getAmountPaid().setScale(2, RoundingMode.HALF_UP).toString());
+            view.getTxtBalance().setText(saved.getBalance().setScale(2, RoundingMode.HALF_UP).toString());
+            view.getTxtSearchID().setText(String.valueOf(invoiceID));
+
+            loadTable();
+            javax.swing.JOptionPane.showMessageDialog(view, "Invoice #" + saved.getInvoiceNumber() + " created successfully.");
         } catch (NumberFormatException ex) {
             javax.swing.JOptionPane.showMessageDialog(view, "Invalid input. Please check the values.");
+        } catch (SQLException ex) {
+            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, "Database error creating invoice", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
+        } catch (Exception ex) {
+            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
         }
     }
 
@@ -86,7 +130,8 @@ public class BillingController {
             String keyword = view.getTxtSearchID().getText().trim();
             populateTable(billingService.searchInvoices(keyword));
         } catch (SQLException ex) {
-            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, "Failed to search invoices", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 
@@ -94,7 +139,8 @@ public class BillingController {
         try {
             populateTable(billingService.getAllInvoices());
         } catch (SQLException ex) {
-            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BillingController.class.getName()).log(Level.SEVERE, "Failed to load invoices", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 
@@ -123,6 +169,9 @@ public class BillingController {
     }
 
     private void navigateBack() {
-        javax.swing.SwingUtilities.getWindowAncestor(view).dispose();
+        MainFrame mainFrame = (MainFrame) javax.swing.SwingUtilities.getWindowAncestor(view);
+        if (mainFrame != null) {
+            mainFrame.navigateTo(MainFrame.PANEL_DASHBOARD);
+        }
     }
 }

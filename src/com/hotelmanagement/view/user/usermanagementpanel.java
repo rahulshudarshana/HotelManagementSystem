@@ -53,6 +53,8 @@ public class usermanagementpanel extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         btnresetpassword = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(153, 153, 153));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("User Management");
 
@@ -80,6 +82,7 @@ public class usermanagementpanel extends javax.swing.JPanel {
         chkShowPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         chkShowPassword.setText("Show password");
 
+        btnadduser.setBackground(new java.awt.Color(255, 255, 102));
         btnadduser.setText("Add user");
         btnadduser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,21 +102,26 @@ public class usermanagementpanel extends javax.swing.JPanel {
         txtConfirmPassword.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         cmbRole.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Manager", "Receptionist", "Housekeeping" }));
+        cmbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Manager", "Receptionist", "Housekeeping", "Accountant" }));
 
         cmbStatus.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive", "Locked" }));
 
+        btnUpdate.setBackground(new java.awt.Color(255, 255, 102));
         btnUpdate.setText("Update");
 
+        btnDelete.setBackground(new java.awt.Color(255, 102, 51));
         btnDelete.setText("Delete");
 
+        btnclear.setBackground(new java.awt.Color(255, 153, 51));
         btnclear.setText("Clear");
 
+        btnback.setBackground(new java.awt.Color(255, 204, 102));
         btnback.setText("Back");
 
         txtsearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btnsearch.setBackground(new java.awt.Color(102, 255, 102));
         btnsearch.setText("Search");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -129,6 +137,7 @@ public class usermanagementpanel extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        btnresetpassword.setBackground(new java.awt.Color(153, 255, 153));
         btnresetpassword.setText("Reset Password");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

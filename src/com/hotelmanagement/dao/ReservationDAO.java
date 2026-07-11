@@ -22,10 +22,10 @@ public class ReservationDAO extends BaseDAO<Reservation> {
     private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM Reservations ORDER BY CheckInDate DESC";
     private static final String SQL_AVAILABILITY = "SELECT COUNT(*) FROM Reservations WHERE RoomID = ? AND Status NOT IN ('Cancelled', 'CheckedOut') AND CheckInDate < ? AND CheckOutDate > ?";
     private static final String SQL_INSERT = "INSERT INTO Reservations (GuestID, RoomID, CheckInDate, CheckOutDate, NumberOfGuests, Status, SpecialRequests, CreatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE = "UPDATE Reservations SET GuestID = ?, RoomID = ?, CheckInDate = ?, CheckOutDate = ?, NumberOfGuests = ?, Status = ?, SpecialRequests = ?, UpdatedAt = GETDATE() WHERE ReservationID = ?";
-    private static final String SQL_UPDATE_STATUS = "UPDATE Reservations SET Status = ?, UpdatedAt = GETDATE() WHERE ReservationID = ?";
+    private static final String SQL_UPDATE = "UPDATE Reservations SET GuestID = ?, RoomID = ?, CheckInDate = ?, CheckOutDate = ?, NumberOfGuests = ?, Status = ?, SpecialRequests = ?, UpdatedAt = NOW() WHERE ReservationID = ?";
+    private static final String SQL_UPDATE_STATUS = "UPDATE Reservations SET Status = ?, UpdatedAt = NOW() WHERE ReservationID = ?";
     private static final String SQL_DELETE = "DELETE FROM Reservations WHERE ReservationID = ?";
-    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM Reservations WHERE CAST(ReservationID AS NVARCHAR) LIKE ? ORDER BY CheckInDate DESC";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM Reservations WHERE CAST(ReservationID AS CHAR) LIKE ? ORDER BY CheckInDate DESC";
 
     public Reservation getReservationById(int reservationID) throws SQLException {
         return findOne(SQL_BY_ID, reservationID);
@@ -63,8 +63,20 @@ public class ReservationDAO extends BaseDAO<Reservation> {
         return queryInt(SQL_AVAILABILITY, roomID, checkOut, checkIn) == 0;
     }
 
+    public boolean isRoomAvailable(int roomID, LocalDate checkIn, LocalDate checkOut, Connection conn) throws SQLException {
+        return queryInt(SQL_AVAILABILITY, conn, roomID, checkOut, checkIn) == 0;
+    }
+
     public int insertReservation(Reservation reservation) throws SQLException {
         return insert(SQL_INSERT,
+            reservation.getGuestID(), reservation.getRoomID(),
+            reservation.getCheckInDate(), reservation.getCheckOutDate(),
+            reservation.getNumberOfGuests(), reservation.getStatus(),
+            reservation.getSpecialRequests(), reservation.getCreatedBy());
+    }
+
+    public int insertReservation(Reservation reservation, Connection conn) throws SQLException {
+        return insert(SQL_INSERT, conn,
             reservation.getGuestID(), reservation.getRoomID(),
             reservation.getCheckInDate(), reservation.getCheckOutDate(),
             reservation.getNumberOfGuests(), reservation.getStatus(),

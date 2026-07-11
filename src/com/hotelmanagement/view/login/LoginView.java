@@ -45,7 +45,7 @@ public class LoginView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
-        setBackground(new java.awt.Color(204, 204, 204));
+        setBackground(new java.awt.Color(153, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Login");
@@ -70,7 +70,7 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        loginbtn.setBackground(new java.awt.Color(153, 153, 153));
+        loginbtn.setBackground(new java.awt.Color(153, 255, 255));
         loginbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         loginbtn.setText("Login");
         loginbtn.addActionListener(new java.awt.event.ActionListener() {
@@ -79,7 +79,7 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
-        loginclosebtn.setBackground(new java.awt.Color(153, 153, 153));
+        loginclosebtn.setBackground(new java.awt.Color(255, 51, 51));
         loginclosebtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         loginclosebtn.setText("Close");
         loginclosebtn.addActionListener(new java.awt.event.ActionListener() {

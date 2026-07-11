@@ -63,85 +63,129 @@ public class employeemanagementpanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
+        setBackground(new java.awt.Color(153, 153, 153));
+        setPreferredSize(new java.awt.Dimension(1107, 457));
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Employee Management");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 15, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("First name:");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 89, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Last name:");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 130, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Gender");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 186, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Date of birth:");
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 227, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel6.setText("NIC:");
+        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 268, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Phone:");
+        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 312, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel8.setText("Email:");
+        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 356, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel9.setText("Department:");
+        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 397, -1, -1));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Position:");
+        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 438, -1, -1));
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel11.setText("Salary:");
+        add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 482, -1, -1));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Hire date:");
+        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 523, -1, -1));
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel13.setText("Employee status:");
+        add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 563, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Employee id:");
+        add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 51, -1, -1));
 
         txtEmployeeID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtEmployeeID, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 48, 140, -1));
 
         txtFirstName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtFirstName, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 86, 140, -1));
 
         txtLastName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtLastName, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 139, 140, -1));
 
         cmbGender.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female", "Other" }));
+        add(cmbGender, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 183, 140, -1));
+        add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 225, 140, -1));
 
         txtNIC.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtNIC, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 265, 140, -1));
 
         txtPhone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtPhone, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 309, 140, -1));
 
         txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 353, 140, -1));
 
         cmbDepartment.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmbDepartment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Reception", "Housekeeping", "Management", "Maintenance", "Security", "Finance" }));
+        cmbDepartment.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Management", "Front Office", "Housekeeping", "Finance", "Food & Beverage", "Security" }));
+        add(cmbDepartment, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 391, 140, -1));
 
         txtPosition.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtPosition, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 435, 140, -1));
 
         txtSalary.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtSalary, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 479, 140, -1));
+        add(dpHireDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(133, 523, 140, -1));
 
-        cmbEmploymentStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive", "On Leave", " " }));
+        cmbEmploymentStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "OnLeave", "Terminated", "Suspended" }));
+        add(cmbEmploymentStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(147, 563, 126, -1));
 
         txtsearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        add(txtsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(349, 16, 149, -1));
 
+        btnsearch.setBackground(new java.awt.Color(102, 255, 102));
         btnsearch.setText("Search");
+        add(btnsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(426, 51, -1, -1));
 
+        btnAdd.setBackground(new java.awt.Color(255, 255, 102));
         btnAdd.setText("Add");
+        add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 101, -1, -1));
 
+        btnupdate.setBackground(new java.awt.Color(255, 255, 102));
         btnupdate.setText("Update");
+        add(btnupdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 142, -1, -1));
 
+        btndelete.setBackground(new java.awt.Color(255, 102, 51));
         btndelete.setText("Delete");
+        add(btndelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 183, -1, -1));
 
+        btnclear.setBackground(new java.awt.Color(255, 153, 51));
         btnclear.setText("Clear");
+        add(btnclear, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 224, -1, -1));
 
+        btnback.setBackground(new java.awt.Color(255, 204, 51));
         btnback.setText("Back");
+        add(btnback, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 268, -1, -1));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -156,152 +200,7 @@ public class employeemanagementpanel extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addGap(18, 18, 18)
-                        .addComponent(cmbEmploymentStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel12))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtEmployeeID)
-                            .addComponent(txtFirstName)
-                            .addComponent(txtLastName)
-                            .addComponent(cmbGender, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtNIC)
-                            .addComponent(txtPhone)
-                            .addComponent(txtEmail)
-                            .addComponent(cmbDepartment, 0, 140, Short.MAX_VALUE)
-                            .addComponent(txtPosition)
-                            .addComponent(txtSalary)
-                            .addComponent(dpHireDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnsearch)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnupdate)
-                            .addComponent(btnAdd)
-                            .addComponent(btndelete)
-                            .addComponent(btnclear)
-                            .addComponent(btnback))))
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(15, 15, 15)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                    .addComponent(jLabel1)
-                                                    .addComponent(txtsearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                    .addComponent(jLabel14)
-                                                    .addComponent(txtEmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(btnsearch))
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                            .addComponent(jLabel2)
-                                                            .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGap(18, 18, 18)
-                                                        .addComponent(jLabel3))
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addGap(27, 27, 27)
-                                                        .addComponent(btnAdd)
-                                                        .addGap(18, 18, 18)
-                                                        .addComponent(btnupdate))))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                    .addComponent(jLabel4)
-                                                    .addComponent(cmbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jLabel5))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(btndelete)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(btnclear))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel6)
-                                    .addComponent(txtNIC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnback))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel7)
-                                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel8)
-                                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel9))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(cmbDepartment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(txtPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11)
-                            .addComponent(txtSalary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
-                            .addComponent(dpHireDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel13)
-                            .addComponent(cmbEmploymentStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(21, 21, 21))
-        );
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(528, 0, 515, 585));
     }// </editor-fold>//GEN-END:initComponents
 
 

@@ -47,7 +47,9 @@ public class PaymentService {
             conn.setAutoCommit(false);
 
             int paymentID = paymentDAO.insertPayment(payment, conn);
-            Bill invoice = billingDAO.getInvoiceById(payment.getInvoiceID(), conn);
+
+            // Lock the invoice row to prevent lost updates
+            Bill invoice = billingDAO.getInvoiceByIdForUpdate(payment.getInvoiceID(), conn);
             if (invoice != null) {
                 BigDecimal newAmountPaid = invoice.getAmountPaid().add(payment.getAmount());
                 BigDecimal newBalance = invoice.getTotalAmount().subtract(newAmountPaid);

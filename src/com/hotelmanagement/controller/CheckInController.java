@@ -4,6 +4,7 @@ import com.hotelmanagement.exception.DataAccessException;
 import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.CheckIn;
 import com.hotelmanagement.service.CheckInService;
+import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.checkin.checkinpanel;
 import java.sql.SQLException;
 import java.util.List;
@@ -31,11 +32,19 @@ public class CheckInController {
 
     private void checkIn() {
         try {
+            String resText = view.getTxtReservationID().getText().trim();
+            String guestText = view.getTxtGuest().getText().trim();
+            String roomText = view.getTxtRoomNo().getText().trim();
+            String guestsText = view.getTxtNoOfGuests().getText().trim();
+            if (resText.isEmpty() || guestText.isEmpty() || roomText.isEmpty() || guestsText.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(view, "Reservation ID, Guest ID, Room No, and Number of Guests are required.");
+                return;
+            }
             CheckIn checkIn = new CheckIn();
-            checkIn.setReservationID(Integer.parseInt(view.getTxtReservationID().getText().trim()));
-            checkIn.setGuestID(Integer.parseInt(view.getTxtGuest().getText().trim()));
-            checkIn.setRoomID(Integer.parseInt(view.getTxtRoomNo().getText().trim()));
-            checkIn.setNumberOfGuests(Integer.parseInt(view.getTxtNoOfGuests().getText().trim()));
+            checkIn.setReservationID(Integer.parseInt(resText));
+            checkIn.setGuestID(Integer.parseInt(guestText));
+            checkIn.setRoomID(Integer.parseInt(roomText));
+            checkIn.setNumberOfGuests(Integer.parseInt(guestsText));
             String receptionistText = view.getTxtReceptionist().getText().trim();
             if (!receptionistText.isEmpty()) {
                 checkIn.setReceptionistID(Integer.parseInt(receptionistText));
@@ -60,7 +69,8 @@ public class CheckInController {
             String keyword = view.getTxtReservationID().getText().trim();
             populateTable(service.searchCheckIns(keyword));
         } catch (SQLException ex) {
-            Logger.getLogger(CheckInController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckInController.class.getName()).log(Level.SEVERE, "Failed to search check-ins", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 
@@ -68,7 +78,8 @@ public class CheckInController {
         try {
             populateTable(service.getAllCheckIns());
         } catch (SQLException ex) {
-            Logger.getLogger(CheckInController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CheckInController.class.getName()).log(Level.SEVERE, "Failed to load check-ins", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 
@@ -90,6 +101,9 @@ public class CheckInController {
     }
 
     private void navigateBack() {
-        javax.swing.SwingUtilities.getWindowAncestor(view).dispose();
+        MainFrame mainFrame = (MainFrame) javax.swing.SwingUtilities.getWindowAncestor(view);
+        if (mainFrame != null) {
+            mainFrame.navigateTo(MainFrame.PANEL_DASHBOARD);
+        }
     }
 }

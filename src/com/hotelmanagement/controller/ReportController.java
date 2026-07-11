@@ -1,6 +1,7 @@
 package com.hotelmanagement.controller;
 
 import com.hotelmanagement.service.ReportService;
+import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.report.reportpanel;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -80,6 +81,9 @@ public class ReportController {
     }
 
     private void navigateBack() {
-        javax.swing.SwingUtilities.getWindowAncestor(view).dispose();
+        MainFrame mainFrame = (MainFrame) javax.swing.SwingUtilities.getWindowAncestor(view);
+        if (mainFrame != null) {
+            mainFrame.navigateTo(MainFrame.PANEL_DASHBOARD);
+        }
     }
 }

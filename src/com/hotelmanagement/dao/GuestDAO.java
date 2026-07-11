@@ -30,6 +30,10 @@ public class GuestDAO extends BaseDAO<Guest> {
         return findOne(SQL_BY_NIC, nic);
     }
 
+    public Guest getGuestByNIC(String nic, Connection conn) throws SQLException {
+        return findOne(SQL_BY_NIC, conn, nic);
+    }
+
     public Guest getGuestByPhone(String phone) throws SQLException {
         return findOne(SQL_BY_PHONE, phone);
     }

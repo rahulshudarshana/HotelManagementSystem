@@ -1,10 +1,15 @@
 package com.hotelmanagement.service;
 
+import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.dao.RoomDAO;
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Room;
 import com.hotelmanagement.model.enums.RoomStatus;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RoomService {
@@ -43,31 +48,51 @@ public class RoomService {
         return roomDAO.searchRooms(keyword);
     }
 
-    public int createRoom(Room room) throws SQLException {
+    public int createRoom(Room room) {
         if (room.getRoomNumber() == null || room.getRoomNumber().trim().isEmpty()) {
-            throw new IllegalArgumentException("Room number is required.");
+            throw new ValidationException("Room number is required.");
         }
         if (room.getPricePerNight() == null || room.getPricePerNight().compareTo(java.math.BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Price per night must be greater than zero.");
+            throw new ValidationException("Price per night must be greater than zero.");
         }
         if (room.getCapacity() <= 0) {
-            throw new IllegalArgumentException("Capacity must be greater than zero.");
+            throw new ValidationException("Capacity must be greater than zero.");
         }
-        if (roomDAO.getRoomByNumber(room.getRoomNumber()) != null) {
-            throw new IllegalArgumentException("A room with this number already exists.");
+        try {
+            if (roomDAO.getRoomByNumber(room.getRoomNumber()) != null) {
+                throw new ValidationException("A room with this number already exists.");
+            }
+            return roomDAO.insertRoom(room);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Room creation failed", e);
+            throw new DataAccessException("Room creation failed due to a database error.", e);
         }
-        return roomDAO.insertRoom(room);
     }
 
-    public void updateRoom(Room room) throws SQLException {
-        roomDAO.updateRoom(room);
+    public void updateRoom(Room room) {
+        try {
+            roomDAO.updateRoom(room);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Room update failed", e);
+            throw new DataAccessException("Room update failed due to a database error.", e);
+        }
     }
 
-    public void updateRoomStatus(int roomID, RoomStatus status) throws SQLException {
-        roomDAO.updateRoomStatus(roomID, status);
+    public void updateRoomStatus(int roomID, RoomStatus status) {
+        try {
+            roomDAO.updateRoomStatus(roomID, status);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Room status update failed", e);
+            throw new DataAccessException("Room status update failed due to a database error.", e);
+        }
     }
 
-    public void deleteRoom(int id) throws SQLException {
-        roomDAO.deleteRoom(id);
+    public void deleteRoom(int id) {
+        try {
+            roomDAO.deleteRoom(id);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Room deletion failed", e);
+            throw new DataAccessException("Room deletion failed due to a database error.", e);
+        }
     }
 }

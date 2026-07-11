@@ -49,11 +49,14 @@ public class CheckInService {
         }
         Connection conn = null;
         try {
-            if (getCheckInByReservation(checkIn.getReservationID()) != null) {
-                throw new ValidationException("This reservation has already been checked in.");
-            }
             conn = DatabaseConfig.getConnection();
             conn.setAutoCommit(false);
+
+            // Check for duplicate inside the transaction to prevent TOCTOU
+            CheckIn existing = checkInDAO.getCheckInByReservation(checkIn.getReservationID(), conn);
+            if (existing != null) {
+                throw new ValidationException("This reservation has already been checked in.");
+            }
 
             int checkInID = checkInDAO.insertCheckIn(checkIn, conn);
             reservationDAO.updateReservationStatus(checkIn.getReservationID(), ReservationStatus.CheckedIn, conn);

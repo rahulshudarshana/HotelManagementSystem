@@ -72,7 +72,7 @@ public class CheckOutService {
                 throw new EntityNotFoundException("No check-in record found for this reservation.");
             }
 
-            long nights = ChronoUnit.DAYS.between(reservation.getCheckInDate(), LocalDate.now());
+            long nights = ChronoUnit.DAYS.between(checkIn.getActualCheckInDate().toLocalDate(), LocalDate.now());
             if (nights <= 0) nights = 1;
 
             Room room = roomDAO.getRoomById(reservation.getRoomID(), conn);

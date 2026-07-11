@@ -1,6 +1,7 @@
 package com.hotelmanagement.util;
 
 import com.hotelmanagement.exception.ValidationException;
+import java.math.BigDecimal;
 
 public final class ValidationUtils {
     private ValidationUtils() {}
@@ -42,5 +43,15 @@ public final class ValidationUtils {
         if (value <= 0) {
             throw new ValidationException(fieldName + " must be greater than zero.");
         }
+    }
+
+    public static void requireNonNull(Object value, String fieldName) {
+        if (value == null) {
+            throw new ValidationException(fieldName + " must not be null.");
+        }
+    }
+
+    public static boolean isValidPositive(BigDecimal value) {
+        return value != null && value.compareTo(BigDecimal.ZERO) > 0;
     }
 }

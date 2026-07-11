@@ -63,6 +63,8 @@ public class billingpanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
+        setBackground(new java.awt.Color(204, 204, 204));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Billing &Payment");
 
@@ -107,8 +109,10 @@ public class billingpanel extends javax.swing.JPanel {
 
         searchidtxt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btnsearch.setBackground(new java.awt.Color(153, 255, 153));
         btnsearch.setText("Search");
 
+        btnCalculate.setBackground(new java.awt.Color(255, 255, 102));
         btnCalculate.setText("Calculation");
         btnCalculate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -116,13 +120,17 @@ public class billingpanel extends javax.swing.JPanel {
             }
         });
 
+        btnProcessPayment.setBackground(new java.awt.Color(255, 255, 102));
         btnProcessPayment.setText("Process Payment");
 
+        btnPrintInvoice.setBackground(new java.awt.Color(255, 255, 102));
         btnPrintInvoice.setText("Print Invoice");
 
+        btncllear.setBackground(new java.awt.Color(255, 153, 102));
         btncllear.setText("Clear");
         btncllear.setToolTipText("");
 
+        btnback.setBackground(new java.awt.Color(255, 204, 102));
         btnback.setText("Back");
 
         reservationtxt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -151,7 +159,7 @@ public class billingpanel extends javax.swing.JPanel {
         cmtpaymentmethod.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmtpaymentmethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit Card", "Debit Card", "Bank Transfer" }));
 
-        cmbPaymentStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Paid", "Pending", "Partially Paid", "Refunded" }));
+        cmbPaymentStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "CreditCard", "DebitCard", "BankTransfer" }));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

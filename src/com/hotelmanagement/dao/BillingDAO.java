@@ -15,6 +15,7 @@ public class BillingDAO extends BaseDAO<Bill> {
 
     private static final String COLUMNS = "InvoiceID, InvoiceNumber, ReservationID, GuestID, RoomCharges, AdditionalCharges, Discount, Tax, TotalAmount, AmountPaid, Balance, Status, IssuedDate, DueDate, Notes, CreatedBy, CreatedAt";
     private static final String SQL_BY_ID = "SELECT " + COLUMNS + " FROM Invoices WHERE InvoiceID = ?";
+    private static final String SQL_BY_ID_FOR_UPDATE = "SELECT " + COLUMNS + " FROM Invoices WHERE InvoiceID = ? FOR UPDATE";
     private static final String SQL_BY_NUMBER = "SELECT " + COLUMNS + " FROM Invoices WHERE InvoiceNumber = ?";
     private static final String SQL_BY_RESERVATION = "SELECT " + COLUMNS + " FROM Invoices WHERE ReservationID = ?";
     private static final String SQL_BY_GUEST = "SELECT " + COLUMNS + " FROM Invoices WHERE GuestID = ? ORDER BY IssuedDate DESC";
@@ -24,7 +25,7 @@ public class BillingDAO extends BaseDAO<Bill> {
     private static final String SQL_UPDATE = "UPDATE Invoices SET RoomCharges = ?, AdditionalCharges = ?, Discount = ?, Tax = ?, TotalAmount = ?, AmountPaid = ?, Balance = ?, Status = ?, DueDate = ?, Notes = ? WHERE InvoiceID = ?";
     private static final String SQL_UPDATE_PAYMENT = "UPDATE Invoices SET AmountPaid = ?, Balance = ?, Status = ? WHERE InvoiceID = ?";
     private static final String SQL_DELETE = "DELETE FROM Invoices WHERE InvoiceID = ?";
-    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM Invoices WHERE CAST(InvoiceID AS NVARCHAR) LIKE ? OR InvoiceNumber LIKE ? ORDER BY IssuedDate DESC";
+    private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM Invoices WHERE CAST(InvoiceID AS CHAR) LIKE ? OR InvoiceNumber LIKE ? ORDER BY IssuedDate DESC";
 
     public Bill getInvoiceById(int invoiceID) throws SQLException {
         return findOne(SQL_BY_ID, invoiceID);
@@ -32,6 +33,10 @@ public class BillingDAO extends BaseDAO<Bill> {
 
     public Bill getInvoiceById(int invoiceID, Connection conn) throws SQLException {
         return findOne(SQL_BY_ID, conn, invoiceID);
+    }
+
+    public Bill getInvoiceByIdForUpdate(int invoiceID, Connection conn) throws SQLException {
+        return findOne(SQL_BY_ID_FOR_UPDATE, conn, invoiceID);
     }
 
     public Bill getInvoiceByNumber(String invoiceNumber) throws SQLException {

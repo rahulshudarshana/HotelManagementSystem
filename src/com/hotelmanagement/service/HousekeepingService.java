@@ -1,11 +1,16 @@
 package com.hotelmanagement.service;
 
+import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.dao.HousekeepingDAO;
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Housekeeping;
 import com.hotelmanagement.model.enums.TaskStatus;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HousekeepingService {
@@ -44,25 +49,45 @@ public class HousekeepingService {
         return housekeepingDAO.searchTasks(keyword);
     }
 
-    public int createTask(Housekeeping task) throws SQLException {
+    public int createTask(Housekeeping task) {
         if (task.getRoomID() <= 0) {
-            throw new IllegalArgumentException("Room is required.");
+            throw new ValidationException("Room is required.");
         }
         if (task.getTaskType() == null || task.getTaskType().trim().isEmpty()) {
-            throw new IllegalArgumentException("Task type is required.");
+            throw new ValidationException("Task type is required.");
         }
-        return housekeepingDAO.insertTask(task);
+        try {
+            return housekeepingDAO.insertTask(task);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Task creation failed", e);
+            throw new DataAccessException("Task creation failed due to a database error.", e);
+        }
     }
 
-    public void updateTask(Housekeeping task) throws SQLException {
-        housekeepingDAO.updateTask(task);
+    public void updateTask(Housekeeping task) {
+        try {
+            housekeepingDAO.updateTask(task);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Task update failed", e);
+            throw new DataAccessException("Task update failed due to a database error.", e);
+        }
     }
 
-    public void updateTaskStatus(int taskID, TaskStatus status) throws SQLException {
-        housekeepingDAO.updateTaskStatus(taskID, status);
+    public void updateTaskStatus(int taskID, TaskStatus status) {
+        try {
+            housekeepingDAO.updateTaskStatus(taskID, status);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Task status update failed", e);
+            throw new DataAccessException("Task status update failed due to a database error.", e);
+        }
     }
 
-    public void deleteTask(int id) throws SQLException {
-        housekeepingDAO.deleteTask(id);
+    public void deleteTask(int id) {
+        try {
+            housekeepingDAO.deleteTask(id);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Task deletion failed", e);
+            throw new DataAccessException("Task deletion failed due to a database error.", e);
+        }
     }
 }

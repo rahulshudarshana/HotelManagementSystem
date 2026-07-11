@@ -98,16 +98,20 @@ public class checkoutpanel extends javax.swing.JPanel {
         ttlamounttxt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         roomtpecmb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        roomtpecmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        roomtpecmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single", "Double", "Triple", "Suite", "Deluxe", "Penthouse" }));
 
         searchcheckouttxt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btnsearch.setBackground(new java.awt.Color(153, 255, 153));
         btnsearch.setText("Search");
 
+        calculatebillbtn.setBackground(new java.awt.Color(255, 255, 51));
         calculatebillbtn.setText("Calculate bill");
 
+        checkoutbtn.setBackground(new java.awt.Color(255, 255, 102));
         checkoutbtn.setText("Check - out");
 
+        btnclear.setBackground(new java.awt.Color(255, 255, 102));
         btnclear.setText("Clear");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -166,19 +170,18 @@ public class checkoutpanel extends javax.swing.JPanel {
                                     .addComponent(calculatebillbtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(checkoutbtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnclear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel10)
-                                    .addGap(50, 50, 50))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jLabel9)
-                                    .addGap(18, 18, 18)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(addchargestxt)
-                                .addComponent(ttlamounttxt, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)))))
+                    .addComponent(jLabel7)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(50, 50, 50))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(18, 18, 18)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(addchargestxt)
+                            .addComponent(ttlamounttxt, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 658, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(27, Short.MAX_VALUE))

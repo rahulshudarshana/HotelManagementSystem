@@ -26,6 +26,12 @@ import java.awt.CardLayout;
 
 public class MainFrame extends javax.swing.JFrame {
 
+    private static MainFrame instance;
+
+    public static MainFrame getInstance() {
+        return instance;
+    }
+
     private final CardLayout cardLayout;
     private final javax.swing.JPanel cardPanel;
     private final DashboardPanel dashboardPanel;
@@ -52,6 +58,10 @@ public class MainFrame extends javax.swing.JFrame {
     public static final String PANEL_HOUSEKEEPING = "housekeeping";
 
     public MainFrame(DashboardPanel dashboardPanel) {
+        if (instance != null) {
+            instance.dispose();
+        }
+        instance = this;
         this.dashboardPanel = dashboardPanel;
         guestPanel = new GuestManagementPanel();
         roomPanel = new RoomManagementPanel();

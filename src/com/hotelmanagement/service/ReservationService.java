@@ -1,11 +1,16 @@
 package com.hotelmanagement.service;
 
+import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.dao.ReservationDAO;
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Reservation;
 import com.hotelmanagement.model.enums.ReservationStatus;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ReservationService {
@@ -48,23 +53,50 @@ public class ReservationService {
         return reservationDAO.isRoomAvailable(roomID, checkIn, checkOut);
     }
 
-    public int createReservation(Reservation reservation) throws SQLException {
+    public int createReservation(Reservation reservation) {
         if (reservation.getCheckInDate() == null) {
-            throw new IllegalArgumentException("Check-in date is required.");
+            throw new ValidationException("Check-in date is required.");
         }
         if (reservation.getCheckOutDate() == null) {
-            throw new IllegalArgumentException("Check-out date is required.");
+            throw new ValidationException("Check-out date is required.");
         }
         if (!reservation.getCheckOutDate().isAfter(reservation.getCheckInDate())) {
-            throw new IllegalArgumentException("Check-out date must be after check-in date.");
+            throw new ValidationException("Check-out date must be after check-in date.");
         }
         if (reservation.getNumberOfGuests() <= 0) {
-            throw new IllegalArgumentException("Number of guests must be greater than zero.");
+            throw new ValidationException("Number of guests must be greater than zero.");
         }
-        if (!isRoomAvailable(reservation.getRoomID(), reservation.getCheckInDate(), reservation.getCheckOutDate())) {
-            throw new IllegalArgumentException("The selected room is not available for the specified dates.");
+        Connection conn = null;
+        try {
+            conn = DatabaseConfig.getConnection();
+            conn.setAutoCommit(false);
+
+            if (!reservationDAO.isRoomAvailable(reservation.getRoomID(), reservation.getCheckInDate(), reservation.getCheckOutDate(), conn)) {
+                throw new ValidationException("The selected room is not available for the specified dates.");
+            }
+            int id = reservationDAO.insertReservation(reservation, conn);
+
+            conn.commit();
+            LOGGER.log(Level.INFO, "Reservation {0} created for room {1}", new Object[]{id, reservation.getRoomID()});
+            return id;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) {
+                    LOGGER.log(Level.SEVERE, "Rollback failed", ex);
+                }
+            }
+            LOGGER.log(Level.SEVERE, "Reservation creation failed", e);
+            throw new DataAccessException("Reservation creation failed due to a database error.", e);
+        } finally {
+            if (conn != null) {
+                try { conn.setAutoCommit(true); } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, "Failed to restore auto-commit", e);
+                }
+                try { conn.close(); } catch (SQLException e) {
+                    LOGGER.log(Level.WARNING, "Failed to close connection", e);
+                }
+            }
         }
-        return reservationDAO.insertReservation(reservation);
     }
 
     public void updateReservation(Reservation reservation) throws SQLException {

@@ -51,6 +51,8 @@ public class checkinpanel extends javax.swing.JPanel {
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jDateChooser2 = new com.toedter.calendar.JDateChooser();
 
+        setBackground(new java.awt.Color(153, 153, 153));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Check - in");
 
@@ -88,16 +90,20 @@ public class checkinpanel extends javax.swing.JPanel {
         receptxt.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         rmcmb.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        rmcmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        rmcmb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single", "Double", "Triple", "Suite", "Deluxe", "Penthouse" }));
 
         txtReservationID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        btnSearch.setBackground(new java.awt.Color(102, 255, 102));
         btnSearch.setText("Search");
 
+        btncheckin.setBackground(new java.awt.Color(255, 255, 102));
         btncheckin.setText("Check - in");
 
+        btnclear.setBackground(new java.awt.Color(255, 204, 51));
         btnclear.setText("Clear");
 
+        btnback.setBackground(new java.awt.Color(255, 204, 51));
         btnback.setText("Back");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -145,7 +151,7 @@ public class checkinpanel extends javax.swing.JPanel {
                                         .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(roomnotxt)
-                                            .addComponent(rmcmb, 0, 104, Short.MAX_VALUE))))
+                                            .addComponent(rmcmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()

@@ -1,9 +1,12 @@
 package com.hotelmanagement.service;
 
 import com.hotelmanagement.dao.EmployeeDAO;
+import com.hotelmanagement.exception.DataAccessException;
+import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.Employee;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EmployeeService {
@@ -34,27 +37,42 @@ public class EmployeeService {
         return employeeDAO.searchEmployees(keyword);
     }
 
-    public int createEmployee(Employee employee) throws SQLException {
+    public int createEmployee(Employee employee) {
         if (employee.getFirstName() == null || employee.getFirstName().trim().isEmpty()) {
-            throw new IllegalArgumentException("First name is required.");
+            throw new ValidationException("First name is required.");
         }
         if (employee.getLastName() == null || employee.getLastName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Last name is required.");
+            throw new ValidationException("Last name is required.");
         }
         if (employee.getNic() == null || employee.getNic().trim().isEmpty()) {
-            throw new IllegalArgumentException("NIC is required.");
+            throw new ValidationException("NIC is required.");
         }
         if (employee.getEmployeeNumber() == null || employee.getEmployeeNumber().trim().isEmpty()) {
-            throw new IllegalArgumentException("Employee number is required.");
+            throw new ValidationException("Employee number is required.");
         }
-        return employeeDAO.insertEmployee(employee);
+        try {
+            return employeeDAO.insertEmployee(employee);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Employee creation failed", e);
+            throw new DataAccessException("Employee creation failed due to a database error.", e);
+        }
     }
 
-    public void updateEmployee(Employee employee) throws SQLException {
-        employeeDAO.updateEmployee(employee);
+    public void updateEmployee(Employee employee) {
+        try {
+            employeeDAO.updateEmployee(employee);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Employee update failed", e);
+            throw new DataAccessException("Employee update failed due to a database error.", e);
+        }
     }
 
-    public void deleteEmployee(int id) throws SQLException {
-        employeeDAO.deleteEmployee(id);
+    public void deleteEmployee(int id) {
+        try {
+            employeeDAO.deleteEmployee(id);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Employee deletion failed", e);
+            throw new DataAccessException("Employee deletion failed due to a database error.", e);
+        }
     }
 }

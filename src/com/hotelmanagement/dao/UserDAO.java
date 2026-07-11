@@ -18,7 +18,7 @@ public class UserDAO extends BaseDAO<User> {
     private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM Users ORDER BY Username";
     private static final String SQL_INSERT = "INSERT INTO Users (EmployeeID, Username, PasswordHash, RoleID, Status) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = "UPDATE Users SET EmployeeID = ?, Username = ?, PasswordHash = ?, RoleID = ?, Status = ?, LastLogin = ? WHERE UserID = ?";
-    private static final String SQL_UPDATE_LAST_LOGIN = "UPDATE Users SET LastLogin = GETDATE() WHERE UserID = ?";
+    private static final String SQL_UPDATE_LAST_LOGIN = "UPDATE Users SET LastLogin = NOW() WHERE UserID = ?";
     private static final String SQL_DELETE = "DELETE FROM Users WHERE UserID = ?";
     private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM Users WHERE LOWER(Username) LIKE ? ORDER BY Username";
 
@@ -28,6 +28,10 @@ public class UserDAO extends BaseDAO<User> {
 
     public User getUserByUsername(String username) throws SQLException {
         return findOne(SQL_BY_USERNAME, username);
+    }
+
+    public User getUserByUsername(String username, Connection conn) throws SQLException {
+        return findOne(SQL_BY_USERNAME, conn, username);
     }
 
     public User getUserById(int userID) throws SQLException {
@@ -44,6 +48,12 @@ public class UserDAO extends BaseDAO<User> {
 
     public int insertUser(User user) throws SQLException {
         return insert(SQL_INSERT,
+            user.getEmployeeID(), user.getUsername(), user.getPasswordHash(),
+            user.getRoleID(), user.getStatus() != null ? user.getStatus() : "Active");
+    }
+
+    public int insertUser(User user, Connection conn) throws SQLException {
+        return insert(SQL_INSERT, conn,
             user.getEmployeeID(), user.getUsername(), user.getPasswordHash(),
             user.getRoleID(), user.getStatus() != null ? user.getStatus() : "Active");
     }
