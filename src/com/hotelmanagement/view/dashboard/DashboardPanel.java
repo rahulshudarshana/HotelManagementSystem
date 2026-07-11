@@ -47,10 +47,10 @@ public class DashboardPanel extends javax.swing.JPanel {
         btncheckout = new javax.swing.JButton();
         btnbilling = new javax.swing.JButton();
         btnemployee = new javax.swing.JButton();
-        btnUser = new javax.swing.JButton();
-        btnHousekeeping = new javax.swing.JButton();
         btnreports = new javax.swing.JButton();
         btnlogout = new javax.swing.JButton();
+        btnUser = new javax.swing.JButton();
+        btnHousekeeping = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 153, 153));
         setToolTipText("Dashboard");
@@ -109,6 +109,10 @@ public class DashboardPanel extends javax.swing.JPanel {
 
         btnlogout.setText("Logout");
 
+        btnUser.setText("User");
+
+        btnHousekeeping.setText("HouseKeeping");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -127,24 +131,8 @@ public class DashboardPanel extends javax.swing.JPanel {
                 .addGap(40, 40, 40)
                 .addComponent(btncheckout))
             .addGroup(layout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(btnbilling)
-                .addGap(34, 34, 34)
-                .addComponent(btnemployee)
-                .addGap(37, 37, 37)
-                .addComponent(btnreports)
-                .addGap(40, 40, 40)
-                .addComponent(btnlogout))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(292, 292, 292)
                 .addComponent(jLabel1))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(85, 85, 85)
-                .addComponent(jLabel2)
-                .addGap(155, 155, 155)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(177, 177, 177)
-                .addComponent(jLabel4))
             .addGroup(layout.createSequentialGroup()
                 .addGap(62, 62, 62)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -166,6 +154,28 @@ public class DashboardPanel extends javax.swing.JPanel {
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(155, 155, 155)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addComponent(jLabel2)
+                        .addGap(155, 155, 155)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(btnHousekeeping)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnbilling)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnemployee)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnreports)
+                        .addGap(40, 40, 40)
+                        .addComponent(btnlogout)))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnUser)
+                    .addComponent(jLabel4)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,10 +190,14 @@ public class DashboardPanel extends javax.swing.JPanel {
                     .addComponent(btncheckout))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnbilling)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnbilling)
+                        .addComponent(btnHousekeeping))
                     .addComponent(btnemployee)
                     .addComponent(btnreports)
-                    .addComponent(btnlogout))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnlogout)
+                        .addComponent(btnUser)))
                 .addGap(6, 6, 6)
                 .addComponent(jLabel1)
                 .addGap(28, 28, 28)
@@ -213,6 +227,8 @@ public class DashboardPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHousekeeping;
+    private javax.swing.JButton btnUser;
     private javax.swing.JButton btnbilling;
     private javax.swing.JButton btncheckin;
     private javax.swing.JButton btncheckout;
@@ -221,8 +237,6 @@ public class DashboardPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnguest;
     private javax.swing.JButton btnlogout;
     private javax.swing.JButton btnreports;
-    private javax.swing.JButton btnUser;
-    private javax.swing.JButton btnHousekeeping;
     private javax.swing.JButton btnreservation;
     private javax.swing.JButton btnroom;
     private javax.swing.JLabel jLabel1;

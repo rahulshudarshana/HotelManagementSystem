@@ -49,6 +49,10 @@ public class CheckOutService {
         return checkOutDAO.getAllCheckOuts();
     }
 
+    public void updateCheckOut(CheckOut checkOut) throws SQLException {
+        checkOutDAO.updateCheckOut(checkOut);
+    }
+
     public List<CheckOut> searchCheckOuts(String keyword) throws SQLException {
         return checkOutDAO.searchCheckOuts(keyword);
     }

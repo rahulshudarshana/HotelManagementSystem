@@ -17,6 +17,7 @@ public class CheckOutDAO extends BaseDAO<CheckOut> {
     private static final String SQL_ALL = "SELECT " + COLUMNS + " FROM CheckOuts ORDER BY ActualCheckOutDate DESC";
     private static final String SQL_INSERT = "INSERT INTO CheckOuts (ReservationID, CheckInID, GuestID, RoomID, RoomCharges, AdditionalCharges, TotalAmount, Notes, ProcessedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_DELETE = "DELETE FROM CheckOuts WHERE CheckOutID = ?";
+    private static final String SQL_UPDATE = "UPDATE CheckOuts SET RoomCharges = ?, AdditionalCharges = ?, TotalAmount = ?, Notes = ? WHERE CheckOutID = ?";
     private static final String SQL_SEARCH = "SELECT " + COLUMNS + " FROM CheckOuts WHERE CAST(ReservationID AS CHAR) LIKE ? ORDER BY ActualCheckOutDate DESC";
 
     public CheckOut getCheckOutById(int checkOutID) throws SQLException {
@@ -47,6 +48,11 @@ public class CheckOutDAO extends BaseDAO<CheckOut> {
             checkOut.getReservationID(), checkOut.getCheckInID(), checkOut.getGuestID(),
             checkOut.getRoomID(), checkOut.getRoomCharges(), checkOut.getAdditionalCharges(),
             checkOut.getTotalAmount(), checkOut.getNotes(), checkOut.getProcessedBy());
+    }
+
+    public void updateCheckOut(CheckOut checkOut) throws SQLException {
+        update(SQL_UPDATE, checkOut.getRoomCharges(), checkOut.getAdditionalCharges(),
+            checkOut.getTotalAmount(), checkOut.getNotes(), checkOut.getCheckOutID());
     }
 
     public void deleteCheckOut(int checkOutID) throws SQLException {

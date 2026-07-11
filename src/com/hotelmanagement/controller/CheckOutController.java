@@ -17,6 +17,8 @@ import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.checkout.checkoutpanel;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -30,6 +32,7 @@ public class CheckOutController {
     private final GuestService guestService;
     private final RoomService roomService;
     private final CheckInDAO checkInDAO;
+    private int currentCheckOutId = -1;
 
     public CheckOutController(checkoutpanel view) {
         this.view = view;
@@ -49,6 +52,18 @@ public class CheckOutController {
         view.getBtnSearch().addActionListener(e -> search());
         view.getBtnClear().addActionListener(e -> clearForm());
         view.getBtnBack().addActionListener(e -> navigateBack());
+        view.getTable().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = view.getTable().getSelectedRow();
+                    if (selectedRow >= 0) {
+                        int checkOutID = (int) view.getTable().getValueAt(selectedRow, 0);
+                        loadCheckOut(checkOutID);
+                    }
+                }
+            }
+        });
     }
 
     private void checkOut() {
@@ -122,7 +137,37 @@ public class CheckOutController {
         }
     }
 
+    private void loadCheckOut(int checkOutID) {
+        try {
+            CheckOut checkOut = service.getCheckOutById(checkOutID);
+            if (checkOut == null) return;
+            currentCheckOutId = checkOutID;
+
+            Reservation reservation = reservationService.getReservationById(checkOut.getReservationID());
+            if (reservation != null) {
+                Guest guest = guestService.getGuestById(reservation.getGuestID());
+                if (guest != null) {
+                    view.getTxtGuestName().setText(guest.getFirstName() + " " + guest.getLastName());
+                }
+                Room room = roomService.getRoomById(reservation.getRoomID());
+                if (room != null) {
+                    view.getTxtRoomNo().setText(room.getRoomNumber());
+                }
+            }
+
+            view.getTxtRoomCharges().setText(checkOut.getRoomCharges().setScale(2, java.math.RoundingMode.HALF_UP).toString());
+            view.getTxtAdditionalCharges().setText(checkOut.getAdditionalCharges().setScale(2, java.math.RoundingMode.HALF_UP).toString());
+            view.getTxtTotalAmount().setText(checkOut.getTotalAmount().setScale(2, java.math.RoundingMode.HALF_UP).toString());
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckOutController.class.getName()).log(Level.SEVERE, "Failed to load check-out", ex);
+        }
+    }
+
     private void updateBill() {
+        if (currentCheckOutId < 0) {
+            javax.swing.JOptionPane.showMessageDialog(view, "Please select a check-out record from the table first.");
+            return;
+        }
         try {
             String roomChargesText = view.getTxtRoomCharges().getText().trim();
             String additionalText = view.getTxtAdditionalCharges().getText().trim();
@@ -133,9 +178,23 @@ public class CheckOutController {
             BigDecimal roomCharges = new BigDecimal(roomChargesText);
             BigDecimal additional = additionalText.isEmpty() ? BigDecimal.ZERO : new BigDecimal(additionalText);
             BigDecimal total = roomCharges.add(additional);
+
+            CheckOut checkOut = new CheckOut();
+            checkOut.setCheckOutID(currentCheckOutId);
+            checkOut.setRoomCharges(roomCharges);
+            checkOut.setAdditionalCharges(additional);
+            checkOut.setTotalAmount(total);
+            checkOut.setNotes(null);
+
+            service.updateCheckOut(checkOut);
             view.getTxtTotalAmount().setText(total.setScale(2, java.math.RoundingMode.HALF_UP).toString());
+            loadTable();
+            javax.swing.JOptionPane.showMessageDialog(view, "Bill updated successfully.");
         } catch (NumberFormatException ex) {
             javax.swing.JOptionPane.showMessageDialog(view, "Invalid amount entered.");
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckOutController.class.getName()).log(Level.SEVERE, "Failed to update bill", ex);
+            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
         }
     }
 
@@ -205,6 +264,7 @@ public class CheckOutController {
     }
 
     private void clearForm() {
+        currentCheckOutId = -1;
         view.getTxtSearch().setText("");
         view.getTxtGuestName().setText("");
         view.getTxtRoomNo().setText("");

@@ -102,6 +102,7 @@ public class HousekeepingController {
                 String empInfo = view.getCmbAssignedEmployee().getSelectedItem().toString();
                 task.setAssignedEmployeeID(Integer.parseInt(empInfo.split("-")[0].trim()));
             }
+            task.setStatus(TaskStatus.Pending);
             task.setCreatedBy(SessionManager.getInstance().getCurrentUserId());
             service.createTask(task);
             loadTable();
