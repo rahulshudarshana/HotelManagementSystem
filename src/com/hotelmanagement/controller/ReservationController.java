@@ -12,6 +12,8 @@ import com.hotelmanagement.service.RoomService;
 import com.hotelmanagement.util.SessionManager;
 import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.reservation.ReservationManagementPanel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -95,6 +97,14 @@ public class ReservationController {
                         Logger.getLogger(ReservationController.class.getName()).log(Level.SEVERE, "Failed to load reservation for selection", ex);
                     }
                 }
+            }
+        });
+
+        view.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                loadComboBoxes();
+                loadTable();
             }
         });
     }
