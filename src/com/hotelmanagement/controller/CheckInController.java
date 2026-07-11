@@ -41,18 +41,20 @@ public class CheckInController {
                 return;
             }
             CheckIn checkIn = new CheckIn();
-            checkIn.setReservationID(Integer.parseInt(resText));
-            checkIn.setGuestID(Integer.parseInt(guestText));
-            checkIn.setRoomID(Integer.parseInt(roomText));
-            checkIn.setNumberOfGuests(Integer.parseInt(guestsText));
+            checkIn.setReservationID(parseIntOrThrow("Reservation ID", resText));
+            checkIn.setGuestID(parseIntOrThrow("Guest ID", guestText));
+            checkIn.setRoomID(parseIntOrThrow("Room No", roomText));
+            checkIn.setNumberOfGuests(parseIntOrThrow("Number of Guests", guestsText));
             String receptionistText = view.getTxtReceptionist().getText().trim();
             if (!receptionistText.isEmpty()) {
-                checkIn.setReceptionistID(Integer.parseInt(receptionistText));
+                checkIn.setReceptionistID(parseIntOrThrow("Receptionist ID", receptionistText));
             }
             service.performCheckIn(checkIn);
             loadTable();
             clearForm();
             javax.swing.JOptionPane.showMessageDialog(view, "Check-in successful.");
+        } catch (NumberFormatException ex) {
+            javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
         } catch (ValidationException ex) {
             javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
         } catch (DataAccessException ex) {
@@ -104,6 +106,14 @@ public class CheckInController {
         MainFrame mainFrame = (MainFrame) javax.swing.SwingUtilities.getWindowAncestor(view);
         if (mainFrame != null) {
             mainFrame.navigateTo(MainFrame.PANEL_DASHBOARD);
+        }
+    }
+
+    private int parseIntOrThrow(String fieldName, String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException(fieldName + " must be a numeric value.");
         }
     }
 }

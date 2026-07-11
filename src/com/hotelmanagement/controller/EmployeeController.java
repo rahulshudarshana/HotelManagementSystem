@@ -84,10 +84,11 @@ public class EmployeeController {
             javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());
         } catch (DataAccessException ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Database error adding employee", ex);
-            javax.swing.JOptionPane.showMessageDialog(view, "A database error occurred. Please try again.");
+            String detail = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
+            javax.swing.JOptionPane.showMessageDialog(view, "Database error: " + detail);
         } catch (Exception ex) {
             Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, "Unexpected error", ex);
-            javax.swing.JOptionPane.showMessageDialog(view, "An unexpected error occurred.");
+            javax.swing.JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
         }
     }
 
