@@ -258,20 +258,6 @@ String password = "your_password";
 
 ---
 
-```# 📸 Screenshots```
-
-```Add screenshots of your application here.```
-
-```text
-screenshots/
-├── login.png
-├── dashboard.png
-├── rooms.png
-├── reservations.png
-├── billing.png
-├── reports.png
-```
-
 ---
 
 # 🔮 Future Enhancements
