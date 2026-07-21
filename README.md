@@ -1,88 +1,172 @@
 # 🏨 Hotel Management System
 
-A Hotel Management System developed to simplify hotel operations by managing room reservations, customer information, check-in/check-out processes, billing, and staff management. This project is designed for the **Hospitality and Tourism Sector** and aims to improve efficiency while providing a better experience for both hotel staff and guests.
+A desktop-based **Hotel Management System** developed using **Java Swing**, **JDBC**, and **MySQL** following the **MVC (Model-View-Controller)** architecture with the **DAO (Data Access Object)** design pattern.
+
+The system is designed for the **Hospitality and Tourism Sector** to streamline hotel operations, including room management, reservations, customer records, billing, staff management, and reporting.
 
 ---
 
-## 📌 Features
+# 📖 Overview
 
-### 👤 User Authentication
+The Hotel Management System helps hotels manage their daily operations digitally by replacing manual processes with an efficient, user-friendly application. The system allows hotel staff to manage room bookings, guest check-ins/check-outs, payments, and customer information while maintaining accurate records in a centralized database.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication
 - Secure login system
 - Role-based access (Admin & Receptionist)
 
-### 🛏️ Room Management
+## 🛏️ Room Management
 - Add new rooms
-- Update room details
+- Update room information
 - Delete rooms
 - View room availability
 - Manage room types and pricing
 
-### 👥 Customer Management
-- Register new customers
+## 👥 Customer Management
+- Register customers
 - Update customer details
-- Search customer records
-- View customer booking history
+- Search customers
+- View customer history
 
-### 📅 Reservation Management
-- Book rooms
+## 📅 Reservation Management
+- Create reservations
 - Modify reservations
 - Cancel reservations
 - Check room availability
-- View reservation details
 
-### ✅ Check-In / Check-Out
+## ✅ Check-In & Check-Out
 - Guest check-in
 - Guest check-out
-- Update room status automatically
+- Automatic room status updates
 
-### 💳 Billing & Payment
+## 💳 Billing & Payments
 - Generate invoices
-- Calculate total charges
-- Record payment details
+- Calculate room charges
+- Record payments
 - Print receipts
 
-### 👨‍💼 Staff Management
-- Add staff members
-- Update staff information
+## 👨‍💼 Staff Management
+- Add staff
+- Update staff details
 - Delete staff records
-- View staff details
+- View employee information
 
-### 📊 Reports
-- Booking reports
-- Customer reports
+## 📊 Reports
+- Reservation reports
 - Revenue reports
+- Customer reports
 - Room occupancy reports
 
 ---
 
-## 🛠️ Technologies Used
+# 🛠 Technologies Used
 
-| Technology | Purpose |
-|------------|---------|
-| Java | Application Development |
-| Java Swing | Desktop User Interface |
+| Technology | Description |
+|------------|-------------|
+| Java | Programming Language |
+| Java Swing | Desktop GUI |
 | JDBC | Database Connectivity |
-| MySQL | Database |
+| MySQL | Database Management System |
 | NetBeans IDE | Development Environment |
 
 ---
 
-## 📂 Project Structure
+# 🏗 System Architecture
 
-```
+The project follows the **MVC (Model-View-Controller)** architecture together with the **DAO (Data Access Object)** design pattern.
+
+### MVC Components
+
+### Model
+Represents the application's data and business logic.
+
+Examples:
+- Customer
+- Room
+- Reservation
+- Staff
+- Payment
+
+### View
+Java Swing forms that provide the graphical user interface.
+
+Examples:
+- Login Form
+- Dashboard
+- Room Management
+- Reservation Form
+- Billing Form
+
+### Controller
+Processes user actions, validates input, communicates with the DAO layer, and updates the views.
+
+Examples:
+- LoginController
+- RoomController
+- CustomerController
+- ReservationController
+- PaymentController
+
+### DAO (Data Access Object)
+
+Responsible for all database operations.
+
+Examples:
+- CustomerDAO
+- RoomDAO
+- ReservationDAO
+- PaymentDAO
+- DBConnection
+
+---
+
+# 📂 Project Structure
+
+```text
 HotelManagementSystem/
 │
 ├── src/
-│   ├── models/
-│   ├── views/
-│   ├── controllers/
-│   ├── database/
-│   └── utilities/
-│
-├── resources/
+│   ├── model/
+│   │     ├── Customer.java
+│   │     ├── Room.java
+│   │     ├── Reservation.java
+│   │     ├── Payment.java
+│   │     └── Staff.java
+│   │
+│   ├── view/
+│   │     ├── LoginForm.java
+│   │     ├── Dashboard.java
+│   │     ├── RoomForm.java
+│   │     ├── CustomerForm.java
+│   │     ├── ReservationForm.java
+│   │     └── BillingForm.java
+│   │
+│   ├── controller/
+│   │     ├── LoginController.java
+│   │     ├── RoomController.java
+│   │     ├── CustomerController.java
+│   │     ├── ReservationController.java
+│   │     └── PaymentController.java
+│   │
+│   ├── dao/
+│   │     ├── DBConnection.java
+│   │     ├── CustomerDAO.java
+│   │     ├── RoomDAO.java
+│   │     ├── ReservationDAO.java
+│   │     └── PaymentDAO.java
+│   │
+│   ├── util/
+│   │     ├── Validator.java
+│   │     ├── Constants.java
+│   │     └── Helper.java
+│   │
+│   └── Main.java
 │
 ├── database/
-│   └── hotel_management.sql
+│     └── hotel_management.sql
 │
 ├── screenshots/
 │
@@ -93,7 +177,7 @@ HotelManagementSystem/
 
 ---
 
-## 🗄️ Database Tables
+# 🗄 Database Tables
 
 - Users
 - Customers
@@ -104,16 +188,42 @@ HotelManagementSystem/
 
 ---
 
-## 🚀 Installation
+# 🔄 Application Workflow
 
-### Prerequisites
+```text
+User
+   │
+   ▼
+View (Swing GUI)
+   │
+   ▼
+Controller
+   │
+   ▼
+DAO Layer
+   │
+   ▼
+MySQL Database
+   ▲
+   │
+Model
+   │
+   ▼
+Updated View
+```
 
-- Java JDK 8 or later
+---
+
+# 🚀 Installation
+
+## Prerequisites
+
+- Java JDK 8 or higher
 - NetBeans IDE
 - MySQL Server
 - MySQL Connector/J (JDBC Driver)
 
-### Steps
+## Steps
 
 1. Clone the repository.
 
@@ -123,13 +233,9 @@ git clone https://github.com/your-username/hotel-management-system.git
 
 2. Open the project in NetBeans.
 
-3. Import the database.
+3. Import the SQL file located in the `database` folder into MySQL.
 
-```sql
-hotel_management.sql
-```
-
-4. Update the database connection details.
+4. Configure your database connection.
 
 ```java
 String url = "jdbc:mysql://localhost:3306/hotel_management";
@@ -139,79 +245,67 @@ String password = "your_password";
 
 5. Run the project.
 
+---
 
+# 🎯 Objectives
 
-## 💻 Main Modules
-
-- Authentication
-- Dashboard
-- Room Management
-- Customer Management
-- Reservation Management
-- Check-In / Check-Out
-- Billing & Payments
-- Staff Management
-- Reports
-
-
-
-## 🎯 Objectives
-
-- Simplify hotel operations
-- Improve booking management
-- Reduce manual paperwork
-- Track room availability
+- Improve hotel operational efficiency
+- Reduce manual record keeping
+- Simplify room reservations
+- Maintain customer information
 - Generate accurate billing
-- Maintain customer records securely
+- Produce useful management reports
 
+---
 
+```# 📸 Screenshots```
 
-## 📷 Screenshots
+```Add screenshots of your application here.```
 
-Add screenshots of the application here.
-
-```
+```text
 screenshots/
 ├── login.png
 ├── dashboard.png
-├── room-management.png
-├── reservation.png
+├── rooms.png
+├── reservations.png
 ├── billing.png
+├── reports.png
 ```
 
+---
 
-
-## 🔮 Future Improvements
+# 🔮 Future Enhancements
 
 - Online room booking
-- Email confirmation
-- SMS notifications
+- Email notifications
+- SMS confirmations
 - QR Code check-in
-- Credit/Debit card payment integration
+- Online payment gateway
 - Mobile application
-- Multi-branch hotel support
+- Multi-hotel support
 - Analytics dashboard
+- Cloud database integration
 
+---
 
-
-## 🤝 Contributing
+# 🤝 Contributing
 
 Contributions are welcome.
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a new branch
 3. Commit your changes
-4. Push to your branch
-5. Open a Pull Request
+4. Push your branch
+5. Create a Pull Request
 
+---
 
+# 📄 License
 
-## 📄 License
+This project is licensed under the **MIT License**.
 
-This project is licensed under the MIT License.
+---
 
+# 👨‍💻 Author
 
-
-## 👨‍💻 Author
-
-Developed as an academic project for the **Hospitality and Tourism Sector**.
+Developed as an academic software engineering project for the **Hospitality and Tourism Sector** using **Java Swing**, **JDBC**, **MySQL**, and the **MVC + DAO architectural pattern**.
