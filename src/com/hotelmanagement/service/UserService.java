@@ -51,7 +51,7 @@ public class UserService {
                 throw new ValidationException("Username already exists.");
             }
             user.setPasswordHash(AuthService.hashPassword(user.getPasswordHash()));
-            int id = userDAO.insertUser(user);
+            int id = userDAO.insertUser(user, conn);
 
             conn.commit();
             LOGGER.log(Level.INFO, "User {0} created", id);
