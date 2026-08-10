@@ -15,6 +15,7 @@ public class ReservationManagementPanel extends javax.swing.JPanel {
      */
     public ReservationManagementPanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

@@ -15,6 +15,7 @@ public class usermanagementpanel extends javax.swing.JPanel {
      */
     public usermanagementpanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

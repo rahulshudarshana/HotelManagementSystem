@@ -15,6 +15,7 @@ public class reportpanel extends javax.swing.JPanel {
      */
     public reportpanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

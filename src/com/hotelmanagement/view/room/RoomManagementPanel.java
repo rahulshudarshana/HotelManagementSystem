@@ -15,6 +15,7 @@ public class RoomManagementPanel extends javax.swing.JPanel {
      */
     public RoomManagementPanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

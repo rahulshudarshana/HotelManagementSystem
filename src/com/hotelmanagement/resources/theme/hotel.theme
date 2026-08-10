@@ -1,0 +1,146 @@
+# Hotel Management System - FlatLaf theme
+# Brand colors
+@accent = #2F6FED
+@accentHover = #1B5FD7
+@danger = #E5533C
+@warning = #D98300
+@success = #2DA44E
+@background = #F2F4F7
+@panelBackground = #FFFFFF
+@text = #1C1C1C
+@muted = #6B7280
+@border = #D1D5DB
+@selection = #D6E4FF
+@tableHeader = #F0F2F5
+@navHover = #E7EBF3
+
+# default font
+defaultFont = Segoe UI 14
+
+# global
+Component.arc = 10
+Component.focusWidth = 2
+Component.focusColor = @accent
+Component.disabledBackground = #ECECEC
+Component.disabledForeground = #A0A4AB
+
+# panel
+Panel.background = @background
+Panel.foreground = @text
+
+# label
+Label.foreground = @text
+Label.disabledForeground = @muted
+
+# button
+Button.arc = 10
+Button.margin = 8, 18, 8, 18
+Button.background = @accent
+Button.foreground = white
+Button.hoverBackground = @accentHover
+Button.pressedBackground = #1646A8
+Button.focusedBackground = @accent
+Button.borderColor = @accent
+Button.default.borderColor = @accent
+Button.default.background = @accent
+Button.default.foreground = white
+Button.disabledBackground = #C9CDD3
+Button.disabledForeground = #8A8F96
+Button.font = bold defaultFont
+
+# toggle / check / radio
+CheckBox.foreground = @text
+CheckBox.focusColor = @accent
+CheckBox.background = @panelBackground
+RadioButton.foreground = @text
+RadioButton.focusColor = @accent
+
+# text field
+TextField.arc = 8
+TextField.background = @panelBackground
+TextField.foreground = @text
+TextField.borderColor = @border
+TextField.focusedBorderColor = @accent
+TextField.margin = 6, 10, 6, 10
+
+PasswordField.arc = 8
+PasswordField.background = @panelBackground
+PasswordField.foreground = @text
+PasswordField.borderColor = @border
+PasswordField.focusedBorderColor = @accent
+PasswordField.margin = 6, 10, 6, 10
+
+FormattedTextField.arc = 8
+FormattedTextField.background = @panelBackground
+FormattedTextField.foreground = @text
+FormattedTextField.borderColor = @border
+FormattedTextField.focusedBorderColor = @accent
+
+TextArea.arc = 8
+TextArea.background = @panelBackground
+TextArea.foreground = @text
+TextArea.borderColor = @border
+TextArea.focusedBorderColor = @accent
+
+# spinner
+Spinner.arc = 8
+Spinner.background = @panelBackground
+Spinner.foreground = @text
+Spinner.borderColor = @border
+Spinner.focusedBorderColor = @accent
+
+# combo box
+ComboBox.arc = 8
+ComboBox.background = @panelBackground
+ComboBox.foreground = @text
+ComboBox.borderColor = @border
+ComboBox.focusedBorderColor = @accent
+ComboBox.selectionBackground = @selection
+ComboBox.selectionForeground = @text
+
+# scroll bar
+ScrollBar.thumbArc = 999
+ScrollBar.thumbInsets = 0, 0, 0, 0
+ScrollBar.width = 12
+ScrollBar.track = @background
+ScrollBar.thumb = #C0C6CF
+ScrollBar.thumb.hover = #A9B0BA
+ScrollBar.thumb.pressed = #929AA5
+
+# scroll pane
+ScrollPane.background = @panelBackground
+ScrollPane.borderColor = @border
+
+# table
+Table.background = @panelBackground
+Table.foreground = @text
+Table.gridColor = #E5E7EB
+Table.selectionBackground = @selection
+Table.selectionForeground = @text
+Table.focusCellBackground = @selection
+Table.focusCellForeground = @text
+Table.rowHeight = 28
+Table.columnMargin = 10
+
+# table header
+TableHeader.background = @tableHeader
+TableHeader.foreground = @text
+TableHeader.font = bold defaultFont
+TableHeader.separatorColor = #E0E3E8
+
+# tabbed pane
+TabbedPane.background = @background
+TabbedPane.selectedBackground = @panelBackground
+TabbedPane.foreground = @muted
+TabbedPane.selectedForeground = @accent
+TabbedPane.borderColor = @border
+TabbedPane.focusColor = @accent
+
+# tooltip
+ToolTip.background = #2B2F36
+ToolTip.foreground = white
+ToolTip.font = 13
+
+# internal frame
+InternalFrame.background = @background
+InternalFrame.borderColor = @border

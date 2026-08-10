@@ -16,6 +16,7 @@ public class checkinpanel extends javax.swing.JPanel {
      */
     public checkinpanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

@@ -15,6 +15,7 @@ public class checkoutpanel extends javax.swing.JPanel {
      */
     public checkoutpanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

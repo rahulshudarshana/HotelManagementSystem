@@ -2,11 +2,15 @@ package com.hotelmanagement.service;
 
 import com.hotelmanagement.config.DatabaseConfig;
 import com.hotelmanagement.dao.CheckInDAO;
+import com.hotelmanagement.dao.GuestDAO;
 import com.hotelmanagement.dao.ReservationDAO;
 import com.hotelmanagement.dao.RoomDAO;
 import com.hotelmanagement.exception.DataAccessException;
 import com.hotelmanagement.exception.ValidationException;
 import com.hotelmanagement.model.CheckIn;
+import com.hotelmanagement.model.Guest;
+import com.hotelmanagement.model.Reservation;
+import com.hotelmanagement.model.Room;
 import com.hotelmanagement.model.enums.ReservationStatus;
 import com.hotelmanagement.model.enums.RoomStatus;
 import java.sql.Connection;
@@ -20,11 +24,13 @@ public class CheckInService {
     private final CheckInDAO checkInDAO;
     private final ReservationDAO reservationDAO;
     private final RoomDAO roomDAO;
+    private final GuestDAO guestDAO;
 
     public CheckInService() {
         this.checkInDAO = new CheckInDAO();
         this.reservationDAO = new ReservationDAO();
         this.roomDAO = new RoomDAO();
+        this.guestDAO = new GuestDAO();
     }
 
     public CheckIn getCheckInById(int id) throws SQLException {
@@ -51,6 +57,20 @@ public class CheckInService {
         try {
             conn = DatabaseConfig.getConnection();
             conn.setAutoCommit(false);
+
+            // Verify referenced entities exist (prevent FK violations)
+            Reservation reservation = reservationDAO.getReservationById(checkIn.getReservationID(), conn);
+            if (reservation == null) {
+                throw new ValidationException("Reservation ID " + checkIn.getReservationID() + " not found.");
+            }
+            Guest guest = guestDAO.getGuestById(checkIn.getGuestID(), conn);
+            if (guest == null) {
+                throw new ValidationException("Guest ID " + checkIn.getGuestID() + " not found.");
+            }
+            Room room = roomDAO.getRoomById(checkIn.getRoomID(), conn);
+            if (room == null) {
+                throw new ValidationException("Room ID " + checkIn.getRoomID() + " not found.");
+            }
 
             // Check for duplicate inside the transaction to prevent TOCTOU
             CheckIn existing = checkInDAO.getCheckInByReservation(checkIn.getReservationID(), conn);

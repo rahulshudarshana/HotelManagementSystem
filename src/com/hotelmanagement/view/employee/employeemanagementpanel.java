@@ -15,6 +15,7 @@ public class employeemanagementpanel extends javax.swing.JPanel {
      */
     public employeemanagementpanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**
