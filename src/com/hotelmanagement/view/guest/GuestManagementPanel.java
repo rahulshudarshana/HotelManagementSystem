@@ -15,6 +15,7 @@ public class GuestManagementPanel extends javax.swing.JPanel {
      */
     public GuestManagementPanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

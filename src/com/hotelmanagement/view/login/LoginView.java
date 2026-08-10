@@ -17,6 +17,8 @@ public class LoginView extends javax.swing.JFrame {
      */
     public LoginView() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(getContentPane());
+        setBackground(com.hotelmanagement.util.UIUtils.PANEL_BG);
         defaultEchoChar = passwordtxt.getEchoChar();
         loginController = new com.hotelmanagement.controller.LoginController(this);
     }
@@ -193,6 +195,7 @@ public class LoginView extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+        com.formdev.flatlaf.FlatLaf.registerCustomDefaultsSource("com.hotelmanagement.resources.theme");
         com.formdev.flatlaf.FlatLightLaf.setup();
         //</editor-fold>
 

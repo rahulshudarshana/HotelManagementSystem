@@ -15,6 +15,7 @@ public class billingpanel extends javax.swing.JPanel {
      */
     public billingpanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

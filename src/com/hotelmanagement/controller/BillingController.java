@@ -172,8 +172,10 @@ public class BillingController {
             payment.setInvoiceID(Integer.parseInt(invoiceIDStr));
             payment.setAmount(new BigDecimal(amountStr));
             payment.setPaymentMethodID(view.getCmbPaymentMethod().getSelectedIndex() + 1);
+            payment.setProcessedBy(SessionManager.getInstance().getCurrentUserId());
             paymentService.recordPayment(payment);
             loadTable();
+            if (currentInvoiceId >= 0) loadInvoice(currentInvoiceId);
             javax.swing.JOptionPane.showMessageDialog(view, "Payment processed successfully.");
         } catch (ValidationException ex) {
             javax.swing.JOptionPane.showMessageDialog(view, ex.getMessage());

@@ -15,6 +15,7 @@ public class housekeepingpanel extends javax.swing.JPanel {
      */
     public housekeepingpanel() {
         initComponents();
+        com.hotelmanagement.util.UIUtils.applyTheme(this);
     }
 
     /**

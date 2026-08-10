@@ -26,6 +26,10 @@ public class GuestDAO extends BaseDAO<Guest> {
         return findOne(SQL_BY_ID, guestID);
     }
 
+    public Guest getGuestById(int guestID, Connection conn) throws SQLException {
+        return findOne(SQL_BY_ID, conn, guestID);
+    }
+
     public Guest getGuestByNIC(String nic) throws SQLException {
         return findOne(SQL_BY_NIC, nic);
     }
@@ -49,6 +53,12 @@ public class GuestDAO extends BaseDAO<Guest> {
 
     public int insertGuest(Guest guest) throws SQLException {
         return insert(SQL_INSERT,
+            guest.getFirstName(), guest.getLastName(), guest.getNic(),
+            guest.getPhone(), guest.getEmail(), guest.getAddress(), guest.getGender());
+    }
+
+    public int insertGuest(Guest guest, Connection conn) throws SQLException {
+        return insert(SQL_INSERT, conn,
             guest.getFirstName(), guest.getLastName(), guest.getNic(),
             guest.getPhone(), guest.getEmail(), guest.getAddress(), guest.getGender());
     }

@@ -32,7 +32,7 @@ public class LoginController {
                 SessionManager.getInstance().login(user);
                 DashboardPanel dashboard = new DashboardPanel();
                 MainFrame mainFrame = new MainFrame(dashboard);
-                new DashboardController(dashboard, mainFrame);
+                new DashboardController(dashboard);
                 mainFrame.setVisible(true);
                 view.dispose();
             } else {

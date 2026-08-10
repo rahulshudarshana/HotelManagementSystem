@@ -1,45 +1,33 @@
 package com.hotelmanagement.controller;
 
 import com.hotelmanagement.service.ReportService;
-import com.hotelmanagement.util.SessionManager;
-import com.hotelmanagement.view.MainFrame;
 import com.hotelmanagement.view.dashboard.DashboardPanel;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DashboardController {
-    private final DashboardPanel view;
-    private final MainFrame mainFrame;
-    private final ReportService reportService;
+    private static final int REFRESH_INTERVAL_MS = 60_000;
 
-    public DashboardController(DashboardPanel view, MainFrame mainFrame) {
+    private final DashboardPanel view;
+    private final ReportService reportService;
+    private final javax.swing.Timer refreshTimer;
+
+    public DashboardController(DashboardPanel view) {
         this.view = view;
-        this.mainFrame = mainFrame;
         this.reportService = new ReportService();
         initControllers();
         loadDashboardStats();
+        refreshTimer = new javax.swing.Timer(REFRESH_INTERVAL_MS, e -> loadDashboardStats());
+        refreshTimer.start();
     }
 
     private void initControllers() {
-        view.getBtnGuest().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_GUEST));
-        view.getBtnRoom().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_ROOM));
-        view.getBtnReservation().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_RESERVATION));
-        view.getBtnCheckIn().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_CHECKIN));
-        view.getBtnCheckOut().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_CHECKOUT));
-        view.getBtnBilling().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_BILLING));
-        view.getBtnEmployee().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_EMPLOYEE));
-        view.getBtnReports().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_REPORT));
-        view.getBtnUser().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_USER));
-        view.getBtnHousekeeping().addActionListener(e -> mainFrame.navigateTo(MainFrame.PANEL_HOUSEKEEPING));
-        view.getBtnLogout().addActionListener(e -> logout());
-    }
-
-    private void logout() {
-        SessionManager.getInstance().logout();
-        mainFrame.dispose();
-        new com.hotelmanagement.view.login.LoginView().setVisible(true);
+        view.getBtnRefresh().addActionListener(e -> loadDashboardStats());
     }
 
     public void loadDashboardStats() {
@@ -50,7 +38,10 @@ public class DashboardController {
             view.getLabelCheckIns().setText(String.valueOf(reportService.getCheckInsToday()));
             view.getLabelCheckOuts().setText(String.valueOf(reportService.getCheckOutsToday()));
             BigDecimal revenue = reportService.getRevenueToday();
-            view.getLabelRevenue().setText("$" + (revenue != null ? revenue.setScale(2, java.math.RoundingMode.HALF_UP).toString() : "0.00"));
+            view.getLabelRevenue().setText("$" + (revenue != null
+                    ? revenue.setScale(2, RoundingMode.HALF_UP).toString() : "0.00"));
+            view.getLabelLastUpdated().setText("Last updated: "
+                    + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         } catch (SQLException ex) {
             Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, "Failed to load dashboard stats", ex);
             view.getLabelTotalRooms().setText("Error");
@@ -59,6 +50,7 @@ public class DashboardController {
             view.getLabelCheckIns().setText("Error");
             view.getLabelCheckOuts().setText("Error");
             view.getLabelRevenue().setText("$Error");
+            view.getLabelLastUpdated().setText("Last updated: error");
         }
     }
 }

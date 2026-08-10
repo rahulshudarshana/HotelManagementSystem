@@ -59,7 +59,7 @@ public class GuestService {
             if (guestDAO.getGuestByNIC(guest.getNic(), conn) != null) {
                 throw new ValidationException("A guest with this NIC already exists.");
             }
-            int id = guestDAO.insertGuest(guest);
+            int id = guestDAO.insertGuest(guest, conn);
 
             conn.commit();
             LOGGER.log(Level.INFO, "Guest {0} created", id);
